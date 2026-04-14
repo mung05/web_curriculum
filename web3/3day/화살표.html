@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>함수의 변신</title>
+  </head>
+  <body>
+    <h1>개발자 도구(F12) 콘솔에서 결과를 확인하세요!</h1>
+
+    <script>
+      // 1. [기본 함수] - 모든 문법이 다 적혀있는 아주 친절한 기계
+      // 'function'이라는 단어가 '나 함수야!'라고 확실히 말해주고 있죠.
+      function add1(a, b) {
+        return a + b;
+      }
+
+      // 2. [화살표 함수 1단계] - 'function'이라는 긴 단어를 지우고 다리(=>)를 놓자!
+      // 함수 이름을 앞에 써주고, function 단어 대신 뒤쪽에 화살표(=>)를 배치합니다.
+      const add2 = (a, b) => {
+        return a + b;
+      };
+
+      // 3. [화살표 함수 2단계] - 'return'과 중괄호{}까지 압축! (한 줄 코드일 때)
+      // 코드가 딱 한 줄이면, 중괄호와 return도 생략 가능합니다.
+      // "화살표 뒤의 내용은 자동으로 반환(return)된다"고 약속했거든요!
+      const add3 = (a, b) => a + b;
+
+      // --- 검증 ---
+      console.log("1번 결과:", add1(10, 20)); // 결과: 30
+      console.log("2번 결과:", add2(10, 20)); // 결과: 30
+      console.log("3번 결과:", add3(10, 20)); // 결과: 30
+
+      /* [용어 정리]
+           - 매개변수(Parameter): 함수(기계)에 넣는 '재료'(a, b).
+           - 화살표(=>): 재료를 넣으면 결과를 도출하는 '연결 다리'.
+           - 상수(const): 함수의 이름표. 한 번 붙이면 바뀌지 않는 '고정된 이름'.
+        */
+
+      /* 2줄 화살표 */
+      const addAndLog = (a, b) => {
+        // 1번 줄: 로직 수행
+        console.log(`더하기를 시작합니다: ${a} + ${b}`);
+
+        // 2번 줄: 결과 반환 (중괄호가 있으면 return이 필수!)
+        return a + b;
+      };
+
+      // 확인
+      console.log(addAndLog(5, 3));
+    </script>
+  </body>
+</html>

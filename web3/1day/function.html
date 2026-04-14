@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>함수 다이어트 실습</title>
+</head>
+<body>
+    <h1>콘솔(F12)에서 결과(3, 3, 3)가 똑같이 나오는지 확인해 보세요!</h1>
+    
+    <script>
+        // 1. [기존 방식] 일반 함수: function 키워드 필수
+        function add(a, b) {
+            return a + b;
+        }
+
+        // 2. [화살표 함수] function 키워드 삭제 -> => 추가
+        const addArrow = (a, b) => {
+            return a + b;
+        };
+
+        // 3. [초간단 모드] 코드가 한 줄이면 { }와 return도 생략!
+        // 중괄호 { }를 없애면 return도 자동으로 포함됩니다.
+        const addSimple = (a, b) => a + b;
+
+        // 결과 출력 (세 함수 모두 똑같은 결과를 냄)
+        console.log("일반 함수 결과:", add(2, 2));        // 3
+        console.log("화살표 함수 결과:", addArrow(2, 2));  // 3
+        console.log("초간단 함수 결과:", addSimple(2, 2)); // 3
+    </script>
+</body>
+</html>

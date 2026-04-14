@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+<body>
+    <h1 id="status">현재 모드: 라이트 모드</h1>
+    <button id="toggle-btn">다크모드 변경</button>
+
+    <script>
+        // 객체로 상태 정보 저장
+        const theme = {
+            mode: "light",
+            color: "white"
+        };
+
+        const body = document.querySelector("body");
+        const status = document.querySelector("#status");
+
+        document.querySelector("#toggle-btn").onclick = () => {
+            // 조건문을 통한 모드 전환
+            if (theme.mode === "light") {
+                theme.mode = "dark";
+                body.style.backgroundColor = "black";
+                body.style.color = "white";
+                status.textContent = "현재 모드: 다크 모드";
+            } else {
+                theme.mode = "light";
+                body.style.backgroundColor = "white";
+                body.style.color = "black";
+                status.textContent = "현재 모드: 라이트 모드";
+            }
+        };
+    </script>
+</body>
+</html>

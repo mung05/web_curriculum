@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>1일차: 데이터 타입 이해하기</title>
+</head>
+<body>
+    <h1>데이터 타입(Data Type) 확인하기</h1>
+    <p>크롬 개발자 도구(F12)의 Console 탭을 확인하세요!</p>
+
+    <script>
+        // 1. 숫자 (Number)
+        let price = 3000;
+        console.log("데이터:", price, "/ 타입:", typeof price);
+
+        // 2. 문자열 (String)
+        let menu = "아메리카노";
+        console.log("데이터:", menu, "/ 타입:", typeof menu);
+
+        // 3. 논리형 (Boolean)
+        let isSoldOut = false;
+        console.log("데이터:", isSoldOut, "/ 타입:", typeof isSoldOut);
+
+        // 4. 템플릿 리터럴을 활용한 응용
+        let info = `${menu}의 가격은 ${price}원입니다.`;
+        console.log("정보:", info);
+        console.log("정보의 타입도 문자열일까요? :", typeof info);
+
+        // [주의!] 숫자와 문자를 더하면 어떻게 될까요?
+        let test = 100 + "100"; 
+        console.log("100 + '100'의 결과:", test, "/ 타입:", typeof test);
+    </script>
+</body>
+</html>

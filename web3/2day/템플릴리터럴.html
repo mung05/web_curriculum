@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>템플릿 리터럴 비교 체험</title>
+  </head>
+  <body>
+    <h1>콘솔(F12)에서 결과를 확인하세요!</h1>
+    // [공식] 
+    `문자열 ${변수명} 문자열`
+
+    <script>
+      const user = "상아";
+      const coffee = "아메리카노";
+      const price = 3000;
+
+      // 1. [옛날 방식] 더하기 연산자 사용 (따옴표 열고 닫느라 정신없음)
+      const oldWay =
+        user + "님, " + coffee + " 주문 완료! 가격은 " + price + "원입니다.";
+
+      // 2. [템플릿 리터럴] 백틱 사용 (문장 쓰듯이 자연스러움)
+      const newWay = `${user}님, ${coffee} 주문 완료! 가격은 ${price}원입니다.`;
+
+      // 결과 출력
+      console.log("--- 옛날 방식 ---");
+      console.log(oldWay);
+
+      console.log("--- 템플릿 리터럴 방식 ---");
+      console.log(newWay);
+    </script>
+  </body>
+</html>

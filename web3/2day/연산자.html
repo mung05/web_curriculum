@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>2일차: 연산자 마스터</title>
+</head>
+<body>
+    <h1>연산자 실습 키오스크</h1>
+    <h2 id="display">현재 가격: 0원</h2>
+
+    <button id="add-btn">가격 추가 (+1000)</button>
+    <button id="sub-btn">할인 적용 (-500)</button>
+    <button id="check-btn">고가 메뉴 확인 (1만원 이상?)</button>
+
+    <script>
+        // 1. [대입 연산자] 가격 데이터 초기화
+        let price = 0;
+        const display = document.querySelector("#display");
+
+        // 2. [산술/대입 연산자] 가격 추가 버튼
+        document.querySelector("#add-btn").onclick = () => {
+            price += 1000; // price = price + 1000 (복합 대입 연산자)
+            display.textContent = `현재 가격: ${price}원`;
+        };
+
+        // 3. [산술/대입 연산자] 할인 버튼
+        document.querySelector("#sub-btn").onclick = () => {
+            price -= 500; // price = price - 500
+            display.textContent = `현재 가격: ${price}원`;
+        };
+
+        // 4. [비교 연산자] 고가 메뉴 확인
+        document.querySelector("#check-btn").onclick = () => {
+            // 비교 연산자 (>=)를 사용하여 결과값을 판단
+            if (price >= 10000) {
+                alert("고가 메뉴입니다!");
+            } else {
+                alert("저렴한 메뉴입니다.");
+            }
+        };
+    </script>
+</body>
+</html>

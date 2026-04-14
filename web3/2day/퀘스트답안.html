@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko">
+<body>
+    <h1 id="status">현재 모드: 라이트</h1>
+    <h2 id="like-count">좋아요: 0</h2>
+    
+    <button id="mode-btn">모드 전환</button>
+    <button id="like-btn">❤️ 좋아요</button>
+
+    <script>
+        // 1. 객체와 변수 정의 (Quest 1)
+        const theme = { mode: "light", color: "white" };
+        let likes = 0; 
+        const userLogs = []; // 기록용 배열 (Quest 5)
+
+        // 2. 증감 연산자를 이용한 좋아요 (Quest 2, 3)
+        document.querySelector("#like-btn").onclick = () => {
+            likes++; // 증감 연산자
+            document.querySelector("#like-count").textContent = `좋아요: ${likes}`;
+            
+            // 기록 배열에 추가
+            userLogs.push(new Date().toLocaleTimeString());
+            
+            if (likes === 10) alert("인기 게시물 선정!");
+        };
+
+        // 3. 조건문을 이용한 다크모드 전환 (Quest 4)
+        document.querySelector("#mode-btn").onclick = () => {
+            if (theme.mode === "light") {
+                theme.mode = "dark";
+                document.body.style.backgroundColor = "black";
+                document.body.style.color = "white";
+                document.querySelector("#status").textContent = "현재 모드: 다크";
+            } else {
+                theme.mode = "light";
+                document.body.style.backgroundColor = "white";
+                document.body.style.color = "black";
+                document.querySelector("#status").textContent = "현재 모드: 라이트";
+            }
+        };
+    </script>
+</body>
+</html>

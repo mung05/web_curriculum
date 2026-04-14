@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+<!-- =========================
+     📌 비밀번호 강도 체크
+     ========================= -->
+
+<input type="password" id="pw" placeholder="비밀번호 입력">
+<p id="pw-msg"></p>
+
+<script>
+  // 요소 가져오기
+  const pw = document.querySelector("#pw");
+  const msg = document.querySelector("#pw-msg");
+
+  // input 이벤트: 입력할 때마다 실행
+  pw.addEventListener("input", () => {
+
+    // 현재 입력된 값
+    const value = pw.value;
+
+    // =========================
+    // 조건문 (여러 단계)
+    // =========================
+
+    // 아무것도 입력 안 했을 때
+    if (value.length === 0) {
+      msg.textContent = "";
+
+    // 6글자 미만
+    } else if (value.length < 6) {
+      msg.textContent = "너무 짧아요 😢";
+      msg.style.color = "red";
+
+    // 6글자 이상 ~ 9글자
+    } else if (value.length < 10) {
+      msg.textContent = "적당해요 🙂";
+      msg.style.color = "orange";
+
+    // 10글자 이상
+    } else {
+      msg.textContent = "아주 안전해요 😎";
+      msg.style.color = "green";
+    }
+
+    // =========================
+    // 📌 핵심 개념 정리
+    // =========================
+    // value.length → 글자 수 확인
+    // input 이벤트 → 실시간 검사
+    // 조건 여러 개 → 단계별 분기 처리
+  });
+</script>
+</body>
+</html>

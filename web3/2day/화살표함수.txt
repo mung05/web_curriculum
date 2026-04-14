@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko">
+<body>
+    <h1 id="result">숫자를 입력하세요</h1>
+    <button id="btn">계산하기</button>
+
+    <script>
+        // 1. 기존 방식의 함수
+        function oldAdd(a, b) {
+            return a + b;
+        }
+
+        // 2. 화살표 함수 방식 (강추!)
+        // 매개변수가 2개일 때
+        const newAdd = (a, b) => a + b; 
+        
+        // 매개변수가 없을 때
+        const sayHello = () => alert("환영합니다!");
+
+        const btn = document.querySelector("#btn");
+        btn.onclick = () => {
+            const sum = newAdd(10, 20); // 화살표 함수 호출
+            document.querySelector("#result").textContent = `결과: ${sum}`;
+            sayHello();
+        };
+    </script>
+</body>
+</html>

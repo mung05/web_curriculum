@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<body>
+    <h1>다크 모드 체험하기</h1>
+    <button onclick="toggleMode()">모드 변경하기</button>
+
+    <script>
+        // 현재 상태를 기억하는 변수
+        let isDarkMode = false; 
+
+        const toggleMode = () => {
+            // 배경색 속성 변경
+            if (isDarkMode === false) {
+                document.body.style.backgroundColor = "black";
+                document.body.style.color = "white";
+                isDarkMode = true; // 상태 변경
+            } else {
+                document.body.style.backgroundColor = "white";
+                document.body.style.color = "black";
+                isDarkMode = false; // 상태 복구
+            }
+        };
+    </script>
+</body>
+</html>

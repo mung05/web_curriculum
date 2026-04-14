@@ -1,0 +1,146 @@
+<!doctype html>
+<!-- HTML5 문서 선언: 최신 HTML 문법 사용 -->
+
+<html lang="en">
+  <head>
+    <!-- 문자 인코딩 설정 (UTF-8: 한글 포함 대부분 문자 지원) -->
+    <meta charset="UTF-8" />
+    
+    <!-- 모바일 화면 대응 (반응형 웹 기본 설정) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- 브라우저 탭 제목 -->
+    <title>Document</title>
+  </head>
+  <body>
+    
+    <!-- 회원가입 폼 전체 영역 -->
+    <form id="signup-form">
+      
+      <!-- 이메일 입력창 -->
+      <!-- type="email" → 기본적으로 이메일 형식 요구하지만 JS로 추가 검증함 -->
+      <input type="email" id="email" placeholder="이메일 입력" />
+      
+      <!-- 이메일 검증 결과 메시지 출력 영역 -->
+      <p id="email-msg"></p>
+
+      <!-- 직업 선택 드롭다운 -->
+      <select id="job">
+        <!-- value="" → 선택 안된 상태 (검증 시 사용 가능) -->
+        <option value="">직업을 선택하세요</option>
+        
+        <!-- 실제 선택 가능한 값들 -->
+        <option value="student">학생</option>
+        <option value="developer">개발자</option>
+      </select>
+
+      <!-- 이용약관 동의 체크박스 -->
+      <input type="checkbox" id="agree" /> 이용약관 동의
+      
+      <!-- 제출 버튼 -->
+      <!-- disabled → 기본적으로 클릭 불가능 상태 -->
+      <button type="submit" id="submit-btn" disabled>가입하기</button>
+    </form>
+
+    <script>
+      // =========================
+      // 1. 요소 선택 (DOM 가져오기)
+      // =========================
+
+      // form 태그 가져오기 (제출 이벤트 제어용)
+      const form = document.querySelector("#signup-form");
+      
+      // 이메일 입력창 가져오기
+      const emailInput = document.querySelector("#email");
+      
+      // 체크박스 가져오기
+      const agreeCheck = document.querySelector("#agree");
+      
+      // 제출 버튼 가져오기
+      const submitBtn = document.querySelector("#submit-btn");
+
+      // =========================
+      // 2. 이메일 형식 검증
+      // =========================
+      emailInput.addEventListener("input", (e) => {
+        
+        // 🔥 핵심: 정규표현식 (RegExp)
+        // 이메일 형태인지 검사하는 패턴
+        // @ 앞뒤 구조 + 도메인(.com 등) 체크
+        const regExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        
+        // 메시지 영역 가져오기 (결과 출력용)
+        const msg = document.querySelector("#email-msg");
+
+        // 🔥 핵심: regExp.test(값)
+        // → 조건 만족하면 true, 아니면 false 반환
+        if (regExp.test(e.target.value)) {
+          // ✔ 올바른 이메일 형식일 때
+          msg.textContent = "사용 가능한 이메일입니다.";
+          msg.style.color = "green";
+        } else {
+          // ❌ 잘못된 이메일 형식일 때
+          msg.textContent = "이메일 형식을 확인해주세요.";
+          msg.style.color = "red";
+        }
+
+        // 🔥 핵심 개념
+        // e → 이벤트 객체
+        // e.target → 이벤트 발생한 요소 (input)
+        // e.target.value → 현재 입력값
+      });
+
+      // =========================
+      // 3. 체크박스 → 버튼 활성화
+      // =========================
+      agreeCheck.addEventListener("change", (e) => {
+        
+        // 🔥 핵심: checked 속성
+        // true → 체크됨 / false → 체크 안됨
+        
+        // 🔥 핵심: disabled 속성
+        // true → 버튼 비활성화
+        // false → 버튼 활성화
+        
+        // 🔥 핵심 로직
+        // !true → false → 활성화
+        // !false → true → 비활성화
+        submitBtn.disabled = !e.target.checked;
+      });
+
+      // =========================
+      // 4. 우클릭 방지
+      // =========================
+      document.addEventListener("contextmenu", (e) => {
+        
+        // 🔥 핵심: preventDefault()
+        // 브라우저 기본 동작을 막음 (여기선 우클릭 메뉴)
+        e.preventDefault();
+        
+        // 사용자에게 안내
+        alert("우클릭은 금지되어 있습니다.");
+      });
+
+      // =========================
+      // 5. 폼 제출 제어
+      // =========================
+      form.addEventListener("submit", (e) => {
+        
+        // 🔥 핵심: 기본 동작 막기
+        // form은 submit하면 자동으로 새로고침됨 → 이걸 막는 것
+        e.preventDefault();
+        
+        // 제출 완료 메시지
+        alert("회원가입이 완료되었습니다!");
+      });
+
+      // =========================
+      // 📌 전체 흐름 정리 (진짜 중요)
+      // =========================
+      // 1. 이메일 입력 → input 이벤트 → 형식 검사
+      // 2. 체크박스 클릭 → change 이벤트 → 버튼 활성화/비활성화
+      // 3. 우클릭 → contextmenu 이벤트 → 막기
+      // 4. 제출 → submit 이벤트 → 새로고침 막고 처리
+    </script>
+  </body>
+</html>

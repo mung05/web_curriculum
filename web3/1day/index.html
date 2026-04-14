@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>미니 키오스크 실습</title>
+</head>
+<body>
+    <h1 id="title">주문 대기 중</h1>
+    <p id="price-info">현재 가격: 0원</p>
+
+    <button onclick="order('아메리카노', 3000)">아메리카노</button>
+    <button onclick="order('카페라떼', 4500)">카페라떼</button>
+    <button onclick="order('아메리카노1', 3500)">아메리카노1</button>
+    <button onclick="order('카페라떼1', 4550)">카페라떼1</button>
+
+    <script>
+        // [변수] 전체 주문 금액을 기억할 '바구니'를 만들고 0으로 초기화
+        let total = 0;
+
+        // [DOM 선택] 화면의 글자를 바꾸기 위해 HTML에 있는 <h1>과 <p>를 자바스크립트로 가져옴
+        const title = document.querySelector("#title");
+        const priceTag = document.querySelector("#price-info");
+
+        // [함수 정의] 버튼을 누르면 실행될 동작(주문 처리 로직)
+        // name: 어떤 메뉴를 선택했는지, price: 얼마인지 정보를 받아옴 (매개변수)
+        const order = (name, price) => {
+            // 1. [데이터 업데이트] 기존 total 바구니의 값에 새 메뉴의 가격을 더함
+            total = total + price;
+
+            // 2. [화면 제어] 화면의 글자 속성(textContent)을 새로운 결과값으로 교체
+            // 템플릿 리터럴(` `)을 사용해 변수 값을 문장 속에 자연스럽게 끼워 넣음
+            title.textContent = `${name} 주문 완료!`;
+            priceTag.textContent = `현재 총액은 ${total}원 입니다.`;
+
+            // 3. [확인] 개발자 도구의 콘솔창에 현재까지 계산된 금액을 기록 (범인 찾기용)
+            console.log(`주문 내역: ${name} / 누적 금액: ${total}`);
+        };
+    </script>
+</body>
+</html>

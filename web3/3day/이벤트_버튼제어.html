@@ -1,0 +1,16 @@
+<div id="btn-group">
+    <button>아메리카노</button>
+    <button>카페라떼</button>
+    <button>딸기주스</button>
+</div>
+
+<script>
+    const group = document.querySelector("#btn-group");
+
+    group.addEventListener("click", (e) => {
+        // e.target은 실제 클릭된 바로 그 버튼을 가리킴
+        if (e.target.tagName === "BUTTON") {
+            console.log(`선택하신 메뉴는 ${e.target.textContent}입니다.`);
+        }
+    });
+</script>

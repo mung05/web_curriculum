@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+<!-- =========================
+     📌 나이에 따른 서비스 제한
+     ========================= -->
+
+<input type="number" id="age" placeholder="나이 입력">
+<button id="check-btn">확인</button>
+<p id="result"></p>
+
+<script>
+  // 요소 가져오기
+  const ageInput = document.querySelector("#age");
+  const btn = document.querySelector("#check-btn");
+  const result = document.querySelector("#result");
+
+  // 버튼 클릭 이벤트
+  btn.addEventListener("click", () => {
+
+    // 🔥 핵심: 문자열 → 숫자로 변환
+    const age = Number(ageInput.value);
+
+    // =========================
+    // 조건문 (if / else if / else)
+    // =========================
+
+    // 20세 이상
+    if (age >= 20) {
+      result.textContent = "성인입니다. 입장 가능!";
+    
+    // 14세 이상 ~ 19세
+    } else if (age >= 14) {
+      result.textContent = "청소년입니다.";
+    
+    // 14세 미만
+    } else {
+      result.textContent = "어린이는 이용할 수 없습니다.";
+    }
+
+    // =========================
+    // 📌 핵심 개념 정리
+    // =========================
+    // Number() → 숫자로 변환 (안 하면 비교 안됨)
+    // else if → 여러 조건 순서대로 검사
+    // 위에서부터 조건을 확인하고, 맞으면 아래는 실행 안됨
+  });
+</script>
+</body>
+</html>
