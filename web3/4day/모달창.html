@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>모달창 예제</title>
+
+  <style>
+    /* 전체 글꼴 설정 */
+    body {
+      font-family: sans-serif;
+    }
+
+    /* =========================
+       1. 모달 배경 영역 (#modal-bg)
+       ========================= */
+    #modal-bg {
+      position: fixed; 
+      /* 화면에 고정 (스크롤해도 따라다님) */
+
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      /* 화면 전체를 덮기 위한 크기 */
+
+      background: rgba(0,0,0,0.5);
+      /* 반투명 검정 배경 */
+
+      display: none; 
+      /* 처음에는 숨김 상태 */
+
+      justify-content: center;
+      align-items: center;
+      /* flex 중앙 정렬 (활성화되면 가운데 뜨게) */
+    }
+
+    /* =========================
+       2. active 클래스가 붙으면 보이게
+       ========================= */
+    #modal-bg.active {
+      display: flex;
+      /* flex로 바뀌면서 중앙 정렬 활성화 */
+    }
+
+    /* =========================
+       3. 모달 내용 박스 (#modal-content)
+       ========================= */
+    #modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      width: 300px;
+      text-align: center;
+    }
+
+    /* 버튼 기본 스타일 */
+    button {
+      padding: 10px 15px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>모달창 만들기</h1>
+
+  <!-- 모달 열기 버튼 -->
+  <button id="open-btn">모달 열기</button>
+
+  <!-- =========================
+       4. 모달 구조
+       ========================= -->
+  <div id="modal-bg">
+    <!-- 배경 (클릭하면 닫힘) -->
+
+    <div id="modal-content">
+      <!-- 실제 내용 영역 -->
+
+      <h2>모달창입니다</h2>
+      <p>여기를 클릭하면 안 닫힘</p>
+
+      <!-- 닫기 버튼 -->
+      <button id="close-btn">닫기</button>
+    </div>
+  </div>
+
+  <script>
+    /* =========================
+       5. 요소 선택
+       ========================= */
+
+    const openBtn = document.querySelector("#open-btn");
+    // #open-btn 요소를 선택해서 변수에 저장
+
+    const closeBtn = document.querySelector("#close-btn");
+    // 닫기 버튼 요소
+
+    const modalBg = document.querySelector("#modal-bg");
+    // 배경 전체 영역
+
+    const modalContent = document.querySelector("#modal-content");
+    // 모달 내부 박스
+
+
+    /* =========================
+       6. 모달 열기 기능
+       ========================= */
+
+    openBtn.addEventListener("click", () => {
+      // click: 버튼을 클릭했을 때 실행되는 이벤트
+
+      modalBg.classList.add("active");
+      // classList.add("active"):
+      // 요소에 active 클래스를 추가 → CSS에서 display:flex로 변경 → 모달이 보임
+    });
+
+
+    /* =========================
+       7. 배경 클릭 시 닫기
+       ========================= */
+
+    modalBg.addEventListener("click", () => {
+      // 배경을 클릭하면 실행됨
+
+      modalBg.classList.remove("active");
+      // active 클래스 제거 → display:none → 모달 사라짐
+    });
+
+
+    /* =========================
+       8. 내부 클릭 막기 (핵심🔥)
+       ========================= */
+
+    modalContent.addEventListener("click", (e) => {
+      // e = event 객체
+      // 클릭 이벤트에 대한 모든 정보가 들어있음
+
+      e.stopPropagation();
+      // stopPropagation():
+      // 이벤트 전파(버블링)를 막음
+
+      // 원래는:
+      // modalContent 클릭 → 부모(modalBg)까지 이벤트 전달됨 → 모달 닫힘
+
+      // 하지만 이걸 막으면:
+      // 내부 클릭은 modalBg로 전달되지 않음 → 안 닫힘
+    });
+
+
+    /* =========================
+       9. 닫기 버튼 기능
+       ========================= */
+
+    closeBtn.addEventListener("click", () => {
+      // 닫기 버튼 클릭 시 실행
+
+      modalBg.classList.remove("active");
+      // 모달 닫기
+    });
+
+  </script>
+
+</body>
+</html>

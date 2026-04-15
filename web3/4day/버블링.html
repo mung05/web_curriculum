@@ -1,0 +1,39 @@
+<div id="parent">
+  부모
+  <button id="child">자식 버튼</button>
+</div>
+
+<script>
+/* =========================
+   1. 부모 요소 클릭 이벤트
+   ========================= */
+
+document.querySelector("#parent").addEventListener("click", () => {
+  // #parent 요소를 클릭했을 때 실행되는 함수
+
+  console.log("부모 클릭");
+  // 콘솔에 "부모 클릭" 출력
+});
+
+
+/* =========================
+   2. 자식 버튼 클릭 이벤트
+   ========================= */
+
+document.querySelector("#child").addEventListener("click", (e) => {
+  // #child (자식 버튼)을 클릭했을 때 실행되는 함수
+
+  console.log("자식 클릭");
+  // 먼저 자식 클릭이 출력됨
+
+  e.stopPropagation();
+  // 🔥 핵심
+  // stopPropagation(): 이벤트 전파(버블링)를 막는 함수
+
+  // 원래 동작 흐름:
+  // 자식 클릭 → 부모로 이벤트 전달 → "부모 클릭"도 같이 실행됨
+
+  // 하지만 이걸 쓰면:
+  // 자식에서 이벤트가 끝남 → 부모까지 안 올라감
+});
+</script>
