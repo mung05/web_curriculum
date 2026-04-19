@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <!-- 반응형 웹을 위한 viewport 설정 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Document</title>
+  </head>
+
+  <body>
+
+    <style>
+      /* =========================
+         1. 사이드바 기본 상태 (숨김)
+         ========================= */
+      #sidebar {
+        position: fixed;
+        /* 화면에 고정 (스크롤해도 따라다님) */
+
+        top: 0;
+        left: -250px;
+        /* 화면 왼쪽 밖으로 이동 → 안 보이게 */
+
+        width: 250px;
+        height: 100%;
+        /* 화면 전체 높이 */
+
+        background: #333;
+        color: white;
+
+        transition: 0.3s;
+        /* 위치 변화 시 부드럽게 이동 (애니메이션 효과) */
+
+        z-index: 100;
+        /* 다른 요소보다 위에 표시 */
+      }
+
+      /* =========================
+         2. active 상태 (보이기)
+         ========================= */
+      #sidebar.active {
+        left: 0;
+        /* 화면 안으로 이동 → 보이게 됨 */
+      }
+
+
+      /* =========================
+         3. 오버레이 (배경 어둡게)
+         ========================= */
+      #overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+
+        width: 100%;
+        height: 100%;
+        /* 화면 전체 덮기 */
+
+        background: rgba(0, 0, 0, 0.5);
+        /* 반투명 검정 배경 */
+
+        display: none;
+        /* 기본은 숨김 */
+
+        z-index: 50;
+        /* 사이드바보다 아래, 다른 요소보다 위 */
+      }
+
+      /* =========================
+         4. 오버레이 활성화
+         ========================= */
+      #overlay.active {
+        display: block;
+        /* 보이게 변경 */
+      }
+    </style>
+
+
+    <!-- =========================
+         5. 메뉴 버튼
+         ========================= -->
+    <button id="menu-btn">메뉴 열기</button>
+
+    <!-- 배경 (클릭 시 닫기 역할) -->
+    <div id="overlay"></div>
+
+    <!-- =========================
+         6. 사이드바 구조
+         ========================= -->
+    <div id="sidebar">
+      <nav>
+        <ul>
+          <li>Home</li>
+          <li>About</li>
+          <li>Contact</li>
+        </ul>
+      </nav>
+    </div>
+
+
+    <script>
+      /* =========================
+         7. DOM 요소 선택
+         ========================= */
+
+      const menuBtn = document.querySelector("#menu-btn");
+      // 메뉴 버튼
+
+      const sidebar = document.querySelector("#sidebar");
+      // 사이드바 영역
+
+      const overlay = document.querySelector("#overlay");
+      // 배경(오버레이)
+
+
+      /* =========================
+         8. 메뉴 버튼 클릭 기능
+         ========================= */
+
+      menuBtn.addEventListener("click", () => {
+        // 버튼 클릭 시 실행
+
+        sidebar.classList.toggle("active");
+        // 사이드바 상태 ON/OFF
+        // active 있으면 제거, 없으면 추가
+
+        overlay.classList.toggle("active");
+        // 오버레이도 동일하게 ON/OFF
+
+        /* =========================
+           9. 상태 기반 텍스트 변경
+           ========================= */
+
+        if (sidebar.classList.contains("active")) {
+          // active 클래스가 존재하면 (사이드바 열림 상태)
+
+          menuBtn.textContent = "메뉴 닫기";
+          // 버튼 텍스트 변경
+        } else {
+          // 사이드바 닫힌 상태
+
+          menuBtn.textContent = "메뉴 열기";
+        }
+      });
+
+
+      /* =========================
+         10. 오버레이 클릭 시 닫기
+         ========================= */
+
+      overlay.addEventListener("click", () => {
+        // 배경 클릭 시 실행
+
+        sidebar.classList.remove("active");
+        // 사이드바 닫기
+
+        overlay.classList.remove("active");
+        // 오버레이 숨김
+
+        menuBtn.textContent = "메뉴 열기";
+        // 버튼 텍스트 초기 상태로 복구
+      });
+
+    </script>
+  </body>
+</html>
