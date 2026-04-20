@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- 모바일 대응 (반응형 기본 설정) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <style>
+      /* =========================
+         📦 입력 필드 영역 스타일
+         ========================= */
+      .field {
+        margin: 20px;
+      }
+
+      /* 안내 메시지 기본 스타일 */
+      .info {
+        font-size: 12px;
+        color: #888;
+      }
+
+      /* 에러 상태 */
+      .error {
+        color: red;
+      }
+
+      /* 성공 상태 */
+      .success {
+        color: green;
+      }
+
+      /* 입력창 기본 스타일 */
+      input {
+        padding: 8px;
+        border: 1px solid #ccc;
+      }
+
+      /* 유효하지 않은 입력일 때 스타일 */
+      input.invalid {
+        border-color: red;
+      }
+    </style>
+
+    <!-- =========================
+         🧾 아이디 입력 영역
+         ========================= -->
+    <div class="field">
+      <label>아이디 (4자 이상)</label><br />
+      
+      <!-- 사용자 입력 -->
+      <input type="text" id="uid" placeholder="아이디 입력" />
+      
+      <!-- 상태 메시지 출력 영역 -->
+      <div id="uid-msg" class="info"></div>
+    </div>
+
+    <!-- =========================
+         🔘 가입 버튼
+         ========================= -->
+    <div class="field">
+      <button id="join-btn">가입 신청</button>
+    </div>
+
+    <script>
+      /* =========================
+         1️⃣ 유효성 검사 함수 (선언적 함수)
+         👉 "조건만 판단"하는 순수 함수
+         ========================= */
+      function validateId(text) {
+        // 아이디 길이가 4자 이상이면 true 반환
+        return text.length >= 4;
+      }
+
+      /* =========================
+         2️⃣ UI 업데이트 함수 (화살표 함수)
+         👉 상태에 따라 화면을 변경
+         ========================= */
+      const updateUI = (isValid) => {
+        const msgEl = document.querySelector("#uid-msg"); // 메시지 영역
+        const inputEl = document.querySelector("#uid");   // 입력창
+
+        if (isValid) {
+          // ✅ 유효한 경우
+          msgEl.textContent = "사용 가능한 아이디입니다.";
+          msgEl.className = "info success"; // 클래스 조합 (기본 + 성공)
+          inputEl.classList.remove("invalid"); // 빨간 테두리 제거
+
+        } else {
+          // ❌ 유효하지 않은 경우
+          msgEl.textContent = "4글자 이상 입력해주세요.";
+          msgEl.className = "info error"; // 클래스 조합 (기본 + 에러)
+          inputEl.classList.add("invalid"); // 빨간 테두리 추가
+        }
+      };
+
+      /* =========================
+         3️⃣ 입력 이벤트 처리
+         👉 사용자가 타이핑할 때마다 실행
+         ========================= */
+      document.querySelector("#uid").addEventListener("input", (e) => {
+        const currentText = e.target.value; // 현재 입력값
+
+        /* 
+           🔁 콜백 흐름 구조
+           1. 데이터 검사
+           2. 결과 기반 UI 반영
+        */
+        const result = validateId(currentText);
+        updateUI(result);
+      });
+
+      /* =========================
+         4️⃣ 버튼 클릭 이벤트 + 비동기 처리
+         ========================= */
+      document.querySelector("#join-btn").addEventListener("click", () => {
+        // 즉시 실행되는 안내 메시지
+        alert("데이터를 검토 중입니다. 잠시만 기다려주세요...");
+
+        /* 
+           ⏳ 비동기 예약 실행
+           1.5초 후 완료 메시지 표시
+        */
+        setTimeout(() => {
+          alert("가입이 완료되었습니다!");
+        }, 1500);
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <!-- 📱 모바일 대응 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Document</title>
+</head>
+<body>
+
+    <!-- 
+        📦 타이머 박스
+        👉 3초 뒤에 사라질 대상
+    -->
+    <div id="timer-box" style="background: yellow;">
+        이 메시지는 3초 뒤에 사라집니다.
+    </div>
+
+<script>
+
+  /* =========================
+     1️⃣ 타이머 함수 (비동기 처리)
+     ========================= */
+
+  setTimeout(() => {
+
+    /* =========================
+       2️⃣ DOM 요소 선택
+       ========================= */
+
+    const boxEl = document.querySelector("#timer-box");
+
+    /* =========================
+       3️⃣ 스타일 변경 (요소 숨기기)
+       ========================= */
+
+    // display: none → 화면에서 완전히 제거 (자리도 사라짐)
+    boxEl.style.display = "none";
+
+  }, 3000); // 3000ms = 3초
+
+</script>
+</body>
+</html>

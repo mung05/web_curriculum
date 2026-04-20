@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>6일차 퀘스트: 마법의 입력창</title>
+    <style>
+        /* 전체 페이지 기본 스타일 */
+        body { 
+            font-family: sans-serif; 
+            text-align: center; 
+            padding-top: 50px; 
+        }
+        
+        /* =========================
+           📦 마법의 상자 스타일
+           ========================= */
+        #box {
+            width: 300px;
+            height: 100px;
+            margin: 20px auto; /* 가운데 정렬 */
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+
+            /* 내부 텍스트를 중앙 정렬하기 위한 flex 설정 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-weight: bold;
+
+            /* 배경색, 텍스트 변경 시 부드러운 애니메이션 효과 */
+            transition: all 0.5s;
+        }
+
+        /* 입력창 스타일 */
+        input {
+            padding: 10px;
+            width: 280px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #aaa;
+        }
+
+        /* 안내 문구 스타일 */
+        .info { 
+            color: #666; 
+            margin-top: 10px; 
+        }
+    </style>
+</head>
+<body>
+
+    <h1>✨ 마법의 입력창</h1>
+    <p class="info">글자를 입력하면 상자의 색이 변합니다!</p>
+
+    <!-- 사용자 입력 영역 -->
+    <input type="text" id="magic-input" placeholder="여기에 글자를 써보세요">
+    
+    <!-- 상태 출력 박스 -->
+    <div id="box">준비 중...</div>
+
+    <script>
+        /* =========================
+           🔍 DOM 요소 선택
+           ========================= */
+        const inputEl = document.querySelector("#magic-input"); // 입력창
+        const boxEl = document.querySelector("#box");           // 결과 박스
+
+        /* =========================
+           1️⃣ 선언적 함수 (상태 처리 로직)
+           👉 글자 수에 따라 UI 변경
+           ========================= */
+        function updateBox(len) {
+            // 10글자 이상일 때
+            if (len >= 10) {
+                boxEl.style.backgroundColor = "skyblue";
+                boxEl.textContent = "와우! 10글자 돌파! 🚀";
+
+            // 5글자 이상일 때
+            } else if (len >= 5) {
+                boxEl.style.backgroundColor = "pink";
+                boxEl.textContent = "좋아요! 5글자 이상! ✨";
+
+            // 1글자 이상일 때
+            } else if (len > 0) {
+                boxEl.style.backgroundColor = "white";
+                boxEl.textContent = "조금 더 입력해볼까요?";
+            }
+        }
+
+        /* =========================
+           2️⃣ 이벤트 리스너 (입력 감시)
+           👉 input 이벤트: 글자가 입력될 때마다 실행됨
+           ========================= */
+        inputEl.addEventListener("input", (e) => {
+            // 현재 입력된 글자 수
+            const currentLength = e.target.value.length;
+            
+            // 상태 업데이트 함수 호출
+            updateBox(currentLength);
+
+            /* =========================
+               3️⃣ 타이머 처리 (비동기 예약 실행)
+               👉 입력값이 비어있을 때
+               ========================= */
+            if (currentLength === 0) {
+                boxEl.textContent = "지워졌네요! 2초 뒤 리셋...";
+
+                // 2초 후 실행되는 예약 함수
+                setTimeout(() => {
+                    /* 
+                       ⚠️ 중요 포인트
+                       사용자가 다시 입력했을 수도 있으므로
+                       "여전히 비어있는지" 재확인
+                    */
+                    if (inputEl.value.length === 0) {
+                        boxEl.style.backgroundColor = "white";
+                        boxEl.textContent = "준비 중...";
+                    }
+                }, 2000); // 2000ms = 2초
+            }
+        });
+    </script>
+</body>
+</html>

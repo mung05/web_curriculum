@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <!-- 📱 반응형 기본 설정 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Document</title>
+</head>
+<body>
+
+    <!-- 
+        🔘 버튼 클릭 시 process 함수 실행
+        👉 alertMsg 함수 "실행이 아니라 전달"됨
+    -->
+    <button onclick="process(alertMsg)">결제하기</button>
+
+<script>
+
+  /* =========================
+     1️⃣ 실행될 함수 (콜백 후보)
+     ========================= */
+
+  function alertMsg() {
+    // 실제 사용자에게 보여줄 결과 메시지
+    alert("결제가 완료되었습니다!");
+  }
+
+
+  /* =========================
+     2️⃣ 처리 함수 (콜백을 받는 함수)
+     ========================= */
+
+  function process(callback) {
+
+    // 어떤 작업이 진행 중이라는 로그
+    console.log("데이터 처리 중...");
+
+    /* 
+       🔥 핵심
+       callback = 전달받은 함수
+
+       👉 callback() = 함수 실행
+    */
+    callback();
+  }
+
+</script>
+</body>
+</html>

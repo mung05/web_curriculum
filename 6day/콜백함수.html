@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button onclick="process(alertMsg)">결제하기</button>
+
+<script>
+  function alertMsg() {
+    alert("결제가 완료되었습니다!");
+  }
+
+  function process(callback) {
+    console.log("데이터 처리 중...");
+    callback(); // 전달받은 함수를 실행
+  }
+</script>
+</body>
+</html>

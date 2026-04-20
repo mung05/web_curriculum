@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="timer-box" style="background: yellow;">이 메시지는 3초 뒤에 사라집니다.</div>
+
+<script>
+  setTimeout(() => {
+    document.querySelector("#timer-box").style.display = "none";
+  }, 3000);
+</script>
+</body>
+</html>

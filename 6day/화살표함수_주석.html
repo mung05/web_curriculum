@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <!-- 모바일 화면 대응 (반응형 기본 설정) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Document</title>
+</head>
+<body>
+
+    <!-- 
+        📌 화면에 출력될 문장
+        span 태그는 "값이 바뀌는 영역" 역할
+    -->
+    <p>5 + 10 = <span id="result">?</span></p>
+
+<script>
+  /* =========================
+     1️⃣ 화살표 함수 정의
+     ========================= */
+
+  // add라는 함수 생성
+  // (a, b)를 받아서 a + b 결과를 바로 반환
+  // 👉 return 생략된 "암시적 반환"
+  const add = (a, b) => a + b;
+
+
+  /* =========================
+     2️⃣ DOM 요소 선택
+     ========================= */
+
+  // id="result"인 span 요소를 가져옴
+  const resultEl = document.querySelector("#result");
+
+
+  /* =========================
+     3️⃣ 함수 실행 (연산 수행)
+     ========================= */
+
+  // add 함수에 5와 10을 전달
+  // 👉 결과: 15
+  const sum = add(5, 10);
+
+
+  /* =========================
+     4️⃣ 화면에 결과 출력
+     ========================= */
+
+  // span 안의 텍스트를 "15"로 변경
+  resultEl.textContent = sum;
+
+</script>
+</body>
+</html>

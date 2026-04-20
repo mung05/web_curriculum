@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>미니 처리 앱</title>
+
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    #box {
+      width: 300px;
+      height: 120px;
+      margin: 20px auto;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      transition: 0.3s;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+
+    .loading {
+      background: orange;
+      color: white;
+    }
+
+    .done {
+      background: green;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>💳 결제 처리 시스템</h2>
+
+  <button id="pay-btn">결제하기</button>
+
+  <div id="box">대기 중...</div>
+
+<script>
+  /* =========================
+     1️⃣ DOM 요소
+     ========================= */
+  const btn = document.querySelector("#pay-btn");
+  const box = document.querySelector("#box");
+
+  /* =========================
+     2️⃣ 콜백 함수 (완료 후 실행)
+     ========================= */
+  function onComplete() {
+    box.textContent = "결제 완료!";
+    box.className = "done";
+  }
+
+  /* =========================
+     3️⃣ 처리 함수 (콜백 받음)
+     ========================= */
+  function process(callback) {
+    // 로딩 상태
+    box.textContent = "결제 처리 중...";
+    box.className = "loading";
+
+    // 2초 후 완료 처리
+    setTimeout(() => {
+      callback(); // 👉 여기서 콜백 실행
+    }, 2000);
+  }
+
+  /* =========================
+     4️⃣ 이벤트 연결
+     ========================= */
+  btn.addEventListener("click", () => {
+    process(onComplete);
+  });
+</script>
+
+</body>
+</html>
