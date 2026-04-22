@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>8일차 실무 실습 - 배열과 반복문</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; padding: 20px; background-color: #f4f4f4; }
+        .container { display: flex; gap: 20px; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); flex: 1; }
+        h2 { border-bottom: 2px solid #3357FF; padding-bottom: 10px; color: #333; }
+        ul { list-style: none; padding: 0; }
+        li { background: #eee; margin: 5px 0; padding: 10px; border-radius: 6px; display: flex; justify-content: space-between; }
+        .btn-del { background: #ff4757; color: white; border: none; padding: 2px 8px; border-radius: 4px; cursor: pointer; }
+        .notice-item { border-left: 4px solid #3357FF; padding-left: 10px; }
+    </style>
+</head>
+<body>
+
+    <h1>JavaScript 실무 활용 (배열 & 반복문)</h1>
+
+    <div class="container">
+        <div class="card">
+            <h2>🛒 장바구니 (Push/Splice)</h2>
+            <ul id="cart-list">
+                </ul>
+        </div>
+
+        <div class="card">
+            <h2>📢 최신 공지사항 (Reverse Loop)</h2>
+            <ul id="notice-list">
+                </ul>
+        </div>
+    </div>
+
+    <script>
+        // --- 1차시: 데이터 관리 (배열) ---
+        const cart = ['맥북 프로', '아이패드', '에어팟'];
+        const notices = ['점검 안내', '신규 기능 업데이트', '이벤트 발표', '정책 개정'];
+
+        // --- 2차시: 장바구니 렌더링 함수 (배열 요소 접근) ---
+        function renderCart() {
+            const cartUl = document.getElementById('cart-list');
+            cartUl.innerHTML = ""; // 기존 리스트 초기화
+
+            // for of 반복문 사용: 요소의 값을 바로 가져옴
+            for (const item of cart) {
+                cartUl.innerHTML += `
+                    <li>
+                        ${item} 
+                        <button class="btn-del" onclick="removeFromCart('${item}')">삭제</button>
+                    </li>`;
+            }
+        }
+
+        // 특정 상품 삭제 로직 (indexOf + splice)
+        function removeFromCart(target) {
+            const index = cart.indexOf(target);
+            if (index !== -1) {
+                cart.splice(index, 1); // 배열에서 실제 데이터 삭제 (파괴적 처리)
+                renderCart(); // UI 업데이트
+            }
+        }
+
+        // --- 3차시: 공지사항 렌더링 (기본 for문 역반복) ---
+        function renderNotices() {
+            const noticeUl = document.getElementById('notice-list');
+            
+            // 최신글이 배열 뒤에 있다고 가정할 때, 역순(i--)으로 출력
+            for (let i = notices.length - 1; i >= 0; i--) {
+                noticeUl.innerHTML += `
+                    <li class="notice-item">
+                        <strong>[NEW]</strong> ${notices[i]}
+                    </li>`;
+            }
+        }
+
+        // 초기 실행
+        renderCart();
+        renderNotices();
+    </script>
+</body>
+</html>

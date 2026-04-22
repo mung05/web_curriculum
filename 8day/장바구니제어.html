@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>2차시 실습: 배열 조작하기</title>
+    <style>
+        body { font-family: 'Pretendard', sans-serif; padding: 40px; background-color: #f0f2f5; color: #333; }
+        .app-container { max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { font-size: 1.5rem; text-align: center; color: #1a73e8; }
+        
+        .control-panel { display: flex; gap: 10px; margin-bottom: 20px; }
+        input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        button { padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; transition: 0.2s; }
+        
+        .btn-add { background-color: #1a73e8; color: white; }
+        .btn-add:hover { background-color: #1557b0; }
+        
+        .list-container { border-top: 2px solid #eee; padding-top: 20px; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; background: #f8f9fa; padding: 10px 15px; margin-bottom: 10px; border-radius: 8px; border-left: 5px solid #1a73e8; }
+        .btn-del { background-color: #ff4d4f; color: white; font-size: 0.8rem; }
+        
+        .status-box { margin-top: 20px; padding: 15px; background: #e8f0fe; border-radius: 8px; font-family: monospace; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <h1>🛒 My Shopping Cart</h1>
+    
+    <div class="control-panel">
+        <input type="text" id="itemInput" placeholder="추가할 상품명 입력">
+        <button class="btn-add" onclick="addItem()">추가 (push)</button>
+    </div>
+
+    <div class="list-container" id="cartDisplay">
+        </div>
+
+    <div class="status-box">
+        <strong>현재 배열 상태 (원본):</strong><br>
+        <span id="arrayStatus">[]</span>
+    </div>
+</div>
+
+<script>
+    // 초기 배열 선언 (데이터)
+    let cart = ['아이패드', '에플펜슬'];
+
+    // 화면을 그리는 함수 (Rendering)
+    function updateUI() {
+        const cartDisplay = document.getElementById('cartDisplay');
+        const arrayStatus = document.getElementById('arrayStatus');
+        
+        // 1. 리스트 화면 업데이트
+        cartDisplay.innerHTML = '';
+        cart.forEach((item, index) => {
+            cartDisplay.innerHTML += `
+                <div class="cart-item">
+                    <span>${index}. <strong>${item}</strong></span>
+                    <button class="btn-del" onclick="removeItem(${index})">삭제 (splice)</button>
+                </div>
+            `;
+        });
+
+        // 2. 실제 배열 상태 표시 (파괴적 처리가 일어났음을 확인)
+        arrayStatus.innerText = JSON.stringify(cart);
+    }
+
+    // 요소 추가 기능 (push)
+    function addItem() {
+        const input = document.getElementById('itemInput');
+        if (input.value.trim() !== '') {
+            cart.push(input.value); // 배열 뒷부분에 추가 (파괴적 처리)
+            input.value = '';
+            updateUI();
+        }
+    }
+
+    // 요소 제거 기능 (인덱스로 제거 - splice)
+    function removeItem(index) {
+        // splice(시작인덱스, 제거개수)
+        cart.splice(index, 1); // 해당 위치의 요소 1개 제거 (파괴적 처리)
+        updateUI();
+    }
+
+    // 초기 화면 실행
+    updateUI();
+</script>
+
+</body>
+</html>

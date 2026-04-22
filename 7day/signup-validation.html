@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>회원가입 유효성 검사</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 48px 40px;
+      width: 420px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #111;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 32px;
+    }
+
+    /* ── 필드 ── */
+    .field {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #444;
+      margin-bottom: 6px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input:focus {
+      border-color: #5c7cfa;
+    }
+
+    input.invalid {
+      border-color: #ff4d4f;
+      background: #fff5f5;
+    }
+
+    input.valid {
+      border-color: #52c41a;
+      background: #f6ffed;
+    }
+
+    /* ── 메시지 ── */
+    .msg {
+      font-size: 12px;
+      margin-top: 5px;
+      min-height: 16px;
+      transition: color 0.2s;
+    }
+
+    .msg.error   { color: #ff4d4f; }
+    .msg.success { color: #52c41a; }
+    .msg.info    { color: #aaa; }
+
+    /* ── 강도 바 (비밀번호) ── */
+    .strength-wrap {
+      margin-top: 8px;
+      display: flex;
+      gap: 5px;
+    }
+
+    .strength-bar {
+      height: 4px;
+      flex: 1;
+      border-radius: 99px;
+      background: #eee;
+      transition: background 0.3s;
+    }
+
+    /* ── 버튼 ── */
+    .btn-join {
+      width: 100%;
+      padding: 13px;
+      background: #5c7cfa;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn-join:hover  { background: #4a69e2; }
+    .btn-join:active { transform: scale(0.98); }
+    .btn-join:disabled {
+      background: #c5cee0;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ── 완료 토스트 ── */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #111;
+      color: #fff;
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-size: 14px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s, transform 0.3s;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h1>회원가입</h1>
+  <p class="subtitle">아래 항목을 모두 올바르게 입력해 주세요.</p>
+
+  <!-- 아이디 -->
+  <div class="field">
+    <label for="uid">아이디 <span style="color:#aaa;font-weight:400">(4자 이상, 영문·숫자)</span></label>
+    <input type="text" id="uid" placeholder="아이디를 입력하세요" />
+    <div id="uid-msg" class="msg info"></div>
+  </div>
+
+  <!-- 비밀번호 -->
+  <div class="field">
+    <label for="pw">비밀번호 <span style="color:#aaa;font-weight:400">(6자 이상)</span></label>
+    <input type="password" id="pw" placeholder="비밀번호를 입력하세요" />
+    <div class="strength-wrap">
+      <div class="strength-bar" id="s1"></div>
+      <div class="strength-bar" id="s2"></div>
+      <div class="strength-bar" id="s3"></div>
+    </div>
+    <div id="pw-msg" class="msg info"></div>
+  </div>
+
+  <!-- 비밀번호 확인 -->
+  <div class="field">
+    <label for="pw2">비밀번호 확인</label>
+    <input type="password" id="pw2" placeholder="비밀번호를 다시 입력하세요" />
+    <div id="pw2-msg" class="msg info"></div>
+  </div>
+
+  <button class="btn-join" id="join-btn" disabled>가입신청</button>
+</div>
+
+<div class="toast" id="toast">🎉 가입이 완료되었습니다!</div>
+
+<script>
+  /* ===========================
+     1. 유효성 검사 함수 (선언적 함수)
+  =========================== */
+
+  // 아이디: 4자 이상, 영문+숫자만
+  function validateId(value) {
+    if (value.length === 0) return { ok: null,  msg: '' };
+    if (value.length < 4)   return { ok: false, msg: '4자 이상 입력해 주세요.' };
+    if (!/^[a-zA-Z0-9]+$/.test(value)) return { ok: false, msg: '영문과 숫자만 사용 가능합니다.' };
+    return { ok: true, msg: '사용 가능한 아이디입니다.' };
+  }
+
+  // 비밀번호: 6자 이상
+  function validatePw(value) {
+    if (value.length === 0) return { ok: null,  msg: '', level: 0 };
+    if (value.length < 6)   return { ok: false, msg: '6자 이상 입력해 주세요.', level: 1 };
+
+    let level = 1;
+    if (/[0-9]/.test(value)) level++;
+    if (/[!@#$%^&*]/.test(value)) level++;
+
+    const labels = ['', '약함', '보통', '강함'];
+    return { ok: true, msg: `비밀번호 강도: ${labels[level]}`, level };
+  }
+
+  // 비밀번호 확인
+  function validatePw2(pw, pw2) {
+    if (pw2.length === 0) return { ok: null,  msg: '' };
+    if (pw !== pw2)       return { ok: false, msg: '비밀번호가 일치하지 않습니다.' };
+    return { ok: true, msg: '비밀번호가 일치합니다.' };
+  }
+
+  /* ===========================
+     2. UI 업데이트 함수 (선언적 함수)
+     매개변수: inputEl, msgEl, result({ ok, msg })
+  =========================== */
+  function updateField(inputEl, msgEl, result) {
+    // 초기 상태 (아무것도 안 쳤을 때)
+    if (result.ok === null) {
+      inputEl.className = '';
+      msgEl.className = 'msg info';
+      msgEl.textContent = '';
+      return;
+    }
+
+    if (result.ok) {
+      inputEl.className = 'valid';
+      msgEl.className = 'msg success';
+    } else {
+      inputEl.className = 'invalid';
+      msgEl.className = 'msg error';
+    }
+    msgEl.textContent = result.msg;
+  }
+
+  // 강도 바 색상 업데이트
+  function updateStrengthBar(level) {
+    const colors = ['#eee', '#ff4d4f', '#faad14', '#52c41a'];
+    const bars = [
+      document.querySelector('#s1'),
+      document.querySelector('#s2'),
+      document.querySelector('#s3'),
+    ];
+
+    bars.forEach((bar, i) => {
+      bar.style.background = i < level ? colors[level] : '#eee';
+    });
+  }
+
+  /* ===========================
+     3. 가입 버튼 활성화 체크 (선언적 함수)
+  =========================== */
+  function checkAllValid() {
+    const uid  = document.querySelector('#uid').value;
+    const pw   = document.querySelector('#pw').value;
+    const pw2  = document.querySelector('#pw2').value;
+
+    const r1 = validateId(uid);
+    const r2 = validatePw(pw);
+    const r3 = validatePw2(pw, pw2);
+
+    const allOk = r1.ok === true && r2.ok === true && r3.ok === true;
+    document.querySelector('#join-btn').disabled = !allOk;
+  }
+
+  /* ===========================
+     4. 이벤트 리스너 (화살표 함수)
+  =========================== */
+
+  // 아이디 입력
+  document.querySelector('#uid').addEventListener('input', (e) => {
+    const result = validateId(e.target.value);
+    updateField(
+      document.querySelector('#uid'),
+      document.querySelector('#uid-msg'),
+      result
+    );
+    checkAllValid();
+  });
+
+  // 비밀번호 입력
+  document.querySelector('#pw').addEventListener('input', (e) => {
+    const result = validatePw(e.target.value);
+    updateField(
+      document.querySelector('#pw'),
+      document.querySelector('#pw-msg'),
+      result
+    );
+    updateStrengthBar(result.level);
+
+    // 비밀번호가 바뀌면 확인란도 다시 검사
+    const pw2Val = document.querySelector('#pw2').value;
+    const r3 = validatePw2(e.target.value, pw2Val);
+    updateField(
+      document.querySelector('#pw2'),
+      document.querySelector('#pw2-msg'),
+      r3
+    );
+    checkAllValid();
+  });
+
+  // 비밀번호 확인 입력
+  document.querySelector('#pw2').addEventListener('input', (e) => {
+    const pw = document.querySelector('#pw').value;
+    const result = validatePw2(pw, e.target.value);
+    updateField(
+      document.querySelector('#pw2'),
+      document.querySelector('#pw2-msg'),
+      result
+    );
+    checkAllValid();
+  });
+
+  /* ===========================
+     5. 가입 버튼 클릭 + 타이머 함수
+  =========================== */
+  document.querySelector('#join-btn').addEventListener('click', () => {
+    const btn = document.querySelector('#join-btn');
+    btn.disabled = true;
+    btn.textContent = '처리 중...';
+
+    // setTimeout: 1.5초 후 완료 처리
+    setTimeout(() => {
+      const toast = document.querySelector('#toast');
+      toast.classList.add('show');
+
+      btn.textContent = '가입완료 ✓';
+      btn.style.background = '#52c41a';
+
+      // 3초 후 토스트 숨기기
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }, 1500);
+  });
+</script>
+
+</body>
+</html>

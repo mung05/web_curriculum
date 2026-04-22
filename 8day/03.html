@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const notifications = [
+        "시스템 점검 안내",
+        "신규 기능 업데이트",
+        "이벤트 당첨자 발표",
+        "개인정보 처리방침 개정",
+        "설문조사 참여 요청",
+      ];
+
+      // 실무 패턴: 최신글이 배열 뒷부분에 추가되므로 역반복으로 출력
+      console.log("--- 최근 공지사항 ---");
+      for (let i = notifications.length - 1; i >= 0; i--) {
+        console.log(`[공지] ${notifications[i]}`);
+      }
+    </script>
+  </body>
+</html>

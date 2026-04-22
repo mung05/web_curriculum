@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>1차시 실습: 배열 기초</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding-top: 50px; background-color: #fffbe6; }
+        .menu-card { 
+            background: white; display: inline-block; padding: 30px; 
+            border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            border: 2px solid #ffd900;
+        }
+        h1 { color: #ff9900; margin-bottom: 10px; }
+        .info { font-size: 1.2rem; color: #555; margin: 20px 0; line-height: 2; }
+        b { color: #333; text-decoration: underline; }
+        .highlight { color: #e67e22; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="menu-card">
+        <h1>🍓 오늘의 과일 식단</h1>
+        <div class="info" id="display">
+            </div>
+    </div>
+
+    <script>
+        // 1. 배열 만들기 (다양한 과일 이름 저장)
+        const fruits = ['사과', '바나나', '망고', '딸기', '포도'];
+
+        // 2. 요소 접근 및 length 속성 활용
+        const firstFruit = fruits[0]; // 인덱스 0번 (첫 번째)
+        const totalCount = fruits.length; // 배열의 전체 길이
+        const lastFruit = fruits[fruits.length - 1]; // 마지막 요소 선택 패턴
+
+        // 3. HTML에 출력하기 (DOM 조작)
+        const displayDiv = document.getElementById('display');
+        
+        displayDiv.innerHTML = `
+            오늘 준비된 과일은 총 <span class="highlight">${totalCount}개</span>입니다.<br>
+            첫 번째 메뉴: <b>${firstFruit}</b><br>
+            마지막 추천 메뉴: <b>${lastFruit}</b>
+        `;
+
+        // 4. 콘솔에서 전체 배열 확인 (수업용)
+        console.log('전체 과일 리스트:', fruits);
+    </script>
+</body>
+</html>

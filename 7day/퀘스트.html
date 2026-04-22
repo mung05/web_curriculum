@@ -1,0 +1,62 @@
+<div class="card" style="margin-top: 20px;">
+  <h2>Quest: 기능 확장</h2>
+  
+  <div class="field">
+    <label>아이디 글자 수 체크</label>
+    <input type="text" id="q-uid" placeholder="아이디 입력" maxlength="20">
+    <div class="msg info">현재 글자 수: <span id="char-count">0</span> / 20</div>
+  </div>
+
+  <div class="field">
+    <label>비밀번호 확인</label>
+    <div style="display: flex; gap: 8px;">
+      <input type="password" id="q-pw" placeholder="비밀번호 입력" style="flex: 1;">
+      <button id="pw-toggle-btn" style="width: 80px; cursor: pointer;">보기</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* =============================================
+     Mission 1: 실시간 글자 수 카운터 (화살표 함수 사용)
+     ============================================= */
+  const qUid = document.querySelector('#q-uid');
+  const charCount = document.querySelector('#char-count');
+
+  qUid.addEventListener('input', (e) => {
+    // 여기에 코드를 작성하세요.
+    const len = e.target.value.length;
+    charCount.textContent = len;
+    
+    // 응용: 10자가 넘으면 글자색을 빨갛게 바꿔보기
+    charCount.style.color = len >= 10 ? 'red' : '#aaa';
+  });
+
+
+  /* =============================================
+     Mission 2: 비밀번호 보기/숨기기 (선언적 함수 사용)
+     ============================================= */
+  const qPw = document.querySelector('#q-pw');
+  const toggleBtn = document.querySelector('#pw-toggle-btn');
+
+  function togglePassword() {
+    // input의 타입을 체크하여 text <-> password 전환
+    if (qPw.type === 'password') {
+      qPw.type = 'text';
+      toggleBtn.textContent = '숨기기';
+    } else {
+      qPw.type = 'password';
+      toggleBtn.textContent = '보기';
+    }
+  }
+
+  toggleBtn.addEventListener('click', togglePassword);
+
+
+  /* =============================================
+     Mission 3: 타이머와 입력 제어 (setTimeout 활용)
+     ============================================= */
+  // 가입 버튼 클릭 시 모든 input을 비활성화(disabled) 했다가 
+  // 타이머가 끝나면 다시 활성화 해보세요.
+  // 힌트: document.querySelectorAll('input').forEach(input => input.disabled = true);
+</script>

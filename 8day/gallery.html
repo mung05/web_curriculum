@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>8일차 최종 프로젝트: 이미지 갤러리</title>
+    <style>
+        /* 디자인 시스템 정의 */
+        :root {
+            --primary-color: #3357FF;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+        }
+
+        body { font-family: 'Pretendard', sans-serif; background-color: var(--bg-color); padding: 50px 20px; margin: 0; }
+        h1 { text-align: center; margin-bottom: 40px; color: #222; }
+
+        /* 갤러리 그리드 레이아웃 */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 카드 아이템 스타일 */
+        .gallery-item {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover { transform: translateY(-10px); }
+
+        /* 이미지 영역 (디자이너들이 중요하게 생각하는 비율 유지) */
+        .img-box {
+            width: 100%;
+            height: 200px;
+            background-color: #eee;
+            overflow: hidden;
+        }
+        
+        .img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 이미지가 찌그러지지 않게 채움 */
+        }
+
+        /* 텍스트 영역 */
+        .content-box { padding: 20px; }
+        .content-box h3 { margin: 0 0 10px 0; font-size: 1.15rem; color: #333; }
+        .content-box p { margin: 0; color: #777; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+    <h1>✨ My Design Portfolio</h1>
+
+    <div class="gallery-grid" id="gallery"></div>
+
+    <script>
+        // 1. 데이터 정의 (실무에서는 이 데이터를 서버에서 받아옵니다)
+        const projectData = [
+            { title: 'CuePlay 브랜드 디자인', category: 'Branding', img: 'https://picsum.photos/id/1/400/300' },
+            { title: 'HiDAX 웹 인터페이스', category: 'Web Design', img: 'https://picsum.photos/id/2/400/300' },
+            { title: 'ADERERROR 패키지', category: 'Package', img: 'https://picsum.photos/id/3/400/300' },
+            { title: '현대적인 미니멀리즘', category: 'Interior', img: 'https://picsum.photos/id/4/400/300' },
+            { title: '친환경 모바일 앱', category: 'UX/UI', img: 'https://picsum.photos/id/5/400/300' },
+            { title: '2D 그래픽 강의안', category: 'Education', img: 'https://picsum.photos/id/6/400/300' }
+        ];
+
+        // 2. 렌더링 로직 (반복문 활용)
+        const gallery = document.querySelector('#gallery');
+
+        // for...of 반복문을 사용하여 각 객체(project)를 순회합니다.
+        for (const project of projectData) {
+            // 템플릿 리터럴을 사용해 HTML 구조 생성
+            gallery.innerHTML += `
+                <div class="gallery-item">
+                    <div class="img-box">
+                        <img src="${project.img}" alt="${project.title}">
+                    </div>
+                    <div class="content-box">
+                        <h3>${project.title}</h3>
+                        <p>${project.category}</p>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

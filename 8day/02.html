@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const cart = ["맥북 프로", "아이패드", "에어팟"];
+
+      // 1. 새 상품 추가
+      cart.push("매직 마우스");
+
+      // 2. 특정 상품(아이패드) 취소하기
+      const target = "아이패드";
+      const index = cart.indexOf(target);
+
+      if (index !== -1) {
+        cart.splice(index, 1);
+        console.log(`${target}이(가) 삭제되었습니다. 현재 장바구니: ${cart}`);
+      }
+    </script>
+  </body>
+</html>

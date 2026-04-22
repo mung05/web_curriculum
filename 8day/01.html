@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // 디자인 시스템에 정의된 브랜드 컬러 리스트
+      const themeColors = [
+        "#FF5733",
+        "#33FF57",
+        "#3357FF",
+        "#F333FF",
+        "#33FFF5",
+      ];
+
+      // 1. 첫 번째(메인) 컬러와 마지막(포인트) 컬러 추출하기
+      const mainColor = themeColors[0];
+      const pointColor = themeColors[themeColors.length - 1];
+
+      console.log(`오늘의 메인 컬러는 ${mainColor}입니다.`);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>7일차 실습: 함수 고급 활용</title>
+    <style>
+        .timer-display { font-size: 2rem; font-weight: bold; margin: 20px 0; }
+        .status-msg { color: blue; min-height: 24px; }
+        .warning { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>타이머 & 콜백 실습</h1>
+    
+    <div class="timer-display" id="viewer">0초</div>
+    <div id="msg" class="status-msg">버튼을 눌러 시작하세요.</div>
+
+    <button id="start-btn">5초 카운트다운 시작</button>
+    <button id="stop-btn">중단</button>
+
+    <script>
+        // [1. 선언적 함수] 화면 업데이트 담당 (매개변수 활용)
+        function updateUI(seconds, message, isWarning = false) {
+            const viewer = document.querySelector('#viewer');
+            const msgEl = document.querySelector('#msg');
+            
+            viewer.textContent = `${seconds}초`;
+            msgEl.textContent = message;
+            
+            // 유효성 검사 때 배운 클래스 제어 응용
+            if (isWarning) msgEl.classList.add('warning');
+            else msgEl.classList.remove('warning');
+        }
+
+        let timerId; // 타이머 아이디 보관 변수
+
+        // [2. 익명 함수 & 화살표 함수] 버튼 이벤트 연결
+        document.querySelector('#start-btn').addEventListener('click', () => {
+            let count = 5;
+            updateUI(count, "카운트다운이 시작되었습니다!");
+
+            // 기존 타이머가 있다면 제거 (중복 실행 방지)
+            clearInterval(timerId);
+
+            // [3. 타이머 함수 & 콜백] 1초마다 실행
+            timerId = setInterval(() => {
+                count--;
+                
+                if (count > 0) {
+                    updateUI(count, "진행 중...");
+                } else {
+                    // [4. 리턴값 대신 콜백 실행과 같은 효과]
+                    clearInterval(timerId);
+                    updateUI(0, "시간 종료! 고생하셨습니다.", true);
+                    
+                    // 2초 뒤 알림창 띄우기 (setTimeout 활용)
+                    setTimeout(() => {
+                        alert("오늘 실습 끝!");
+                    }, 500);
+                }
+            }, 1000);
+        });
+
+        // [5. 타이머 제거] 중단 버튼
+        document.querySelector('#stop-btn').addEventListener('click', () => {
+            clearInterval(timerId);
+            updateUI(0, "중단되었습니다.");
+        });
+    </script>
+</body>
+</html>
