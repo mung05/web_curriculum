@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>10일차 실습 - 이벤트 객체 활용</title>
+    <style>
+      .tab-container {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+      .tab-button {
+        padding: 10px 20px;
+        cursor: pointer;
+        border: 1px solid #ccc;
+        background: #fff;
+        transition: 0.3s;
+      }
+      /* 클릭된 버튼에 적용할 스타일 */
+      .tab-button.active {
+        background: #007bff;
+        color: white;
+        border-color: #007bff;
+      }
+
+      .display-area {
+        padding: 20px;
+        border: 1px dashed #aaa;
+        background: #f9f9f9;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>📂 카테고리 선택 (event.target 활용)</h3>
+    <div class="tab-container">
+      <button class="tab-button active">전체</button>
+      <button class="tab-button">디자인</button>
+      <button class="tab-button">개발</button>
+      <button class="tab-button">마케팅</button>
+    </div>
+
+    <div class="display-area">
+      현재 선택된 카테고리: <strong id="selected-category">전체</strong>
+    </div>
+
+    <script>
+      // 모든 탭 버튼들을 가져옵니다.
+      const tabs = document.querySelectorAll(".tab-button");
+      const resultText = document.querySelector("#selected-category");
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", function (event) {
+          // [핵심] event.target은 실제 클릭이 발생한 요소를 가리킵니다.
+          const clickedTarget = event.target;
+
+          // 1. 기존에 'active' 클래스가 붙어있던 버튼에서 클래스 제거
+          // (현업에서 가장 많이 쓰는 '상태 초기화' 패턴)
+          tabs.forEach((btn) => btn.classList.remove("active"));
+
+          // 2. 클릭된 대상(event.target)에만 'active' 클래스 추가
+          clickedTarget.classList.add("active");
+
+          // 3. 클릭된 버튼의 텍스트를 읽어와서 화면에 출력
+          resultText.textContent = clickedTarget.innerText;
+
+          console.log("클릭된 요소:", clickedTarget);
+        });
+      });
+    </script>
+  </body>
+</html>

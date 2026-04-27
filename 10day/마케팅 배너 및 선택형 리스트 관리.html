@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>10일차 실습 - DOM 조작</title>
+    <style>
+      .banner {
+        background: #333;
+        color: #fff;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+      }
+      .cart-item {
+        border-bottom: 1px solid #ddd;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .btn-close {
+        cursor: pointer;
+        background: #ff4d4d;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 3px;
+      }
+      .empty-msg {
+        color: #999;
+        font-style: italic;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="top-banner" class="banner">
+      <span>지금 가입하면 50% 할인 쿠폰 증정! 🎫</span>
+      <button class="btn-close" onclick="removeBanner()">닫기</button>
+    </div>
+
+    <h3>🛒 내 장바구니</h3>
+    <ul id="cart-list">
+      <li class="cart-item">
+        <span>맥북 프로 14인치</span>
+        <button class="btn-delete">삭제</button>
+      </li>
+      <li class="cart-item">
+        <span>로지텍 MX Master 3</span>
+        <button class="btn-delete">삭제</button>
+      </li>
+    </ul>
+    <p id="empty-cart" class="empty-msg">장바구니가 비어 있습니다.</p>
+
+    <script>
+      // [1] 단일 요소 제거 (상단 배너)
+      function removeBanner() {
+        // 1. 가져오기: ID로 배너 요소 선택
+        const banner = document.querySelector("#top-banner");
+
+        // 2. 제거하기: remove() 메서드 활용
+        if (banner) {
+          banner.remove();
+          console.log("배너가 제거되었습니다.");
+        }
+      }
+
+      // [2] 관계를 이용한 탐색 및 제거 (장바구니)
+      // 모든 삭제 버튼을 가져와서 클릭 이벤트 연결
+      const deleteButtons = document.querySelectorAll(".btn-delete");
+      const cartList = document.querySelector("#cart-list");
+      const emptyMsg = document.querySelector("#empty-cart");
+
+      deleteButtons.forEach((button) => {
+        button.addEventListener("click", function (event) {
+          // 1. 탐색: 클릭된 버튼의 가장 가까운 부모 <li> 요소를 찾음
+          const item = event.target.closest(".cart-item");
+
+          // 2. 제거
+          if (item) {
+            item.remove();
+          }
+
+          // 3. 실무 디테일: 리스트가 하나도 없으면 '비어있음' 메시지 표시
+          if (cartList.children.length === 0) {
+            emptyMsg.style.display = "block";
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

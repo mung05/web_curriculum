@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>8일차 최종 프로젝트: 이미지 갤러리</title>
+    <style>
+      /* 디자인 시스템 정의 */
+      :root {
+        --primary-color: #3357ff;
+        --bg-color: #f8f9fa;
+        --card-bg: #ffffff;
+      }
+
+      body {
+        font-family: "Pretendard", sans-serif;
+        background-color: var(--bg-color);
+        padding: 50px 20px;
+        margin: 0;
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 40px;
+        color: #222;
+      }
+
+      /* 갤러리 그리드 레이아웃 */
+      .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 25px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      /* 카드 아이템 스타일 */
+      .gallery-item {
+        background: var(--card-bg);
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease;
+      }
+
+      .gallery-item:hover {
+        transform: translateY(-10px);
+      }
+
+      /* 이미지 영역 (디자이너들이 중요하게 생각하는 비율 유지) */
+      .img-box {
+        width: 100%;
+        height: 200px;
+        background-color: #eee;
+        overflow: hidden;
+      }
+
+      .img-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* 이미지가 찌그러지지 않게 채움 */
+      }
+
+      /* 텍스트 영역 */
+      .content-box {
+        padding: 20px;
+      }
+      .content-box h3 {
+        margin: 0 0 10px 0;
+        font-size: 1.15rem;
+        color: #333;
+      }
+      .content-box p {
+        margin: 0;
+        color: #777;
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>My Design Portfolio</h1>
+
+    <div class="gallery-grid" id="gallery"></div>
+
+    <script>
+      // ---------------------------------------------
+      // 📌 1. 데이터 (배열 + 객체)
+      // ---------------------------------------------
+      // 여러 개의 프로젝트 정보를 배열로 저장
+      // 각 요소는 객체 형태 (title, category, img 속성 포함)
+      const projectData = [
+        {
+          title: "CuePlay 브랜드 디자인", // 프로젝트 제목
+          category: "Branding", // 카테고리
+          img: "https://picsum.photos/id/1/400/300", // 이미지 주소
+        },
+        {
+          title: "HiDAX 웹 인터페이스",
+          category: "Web Design",
+          img: "https://picsum.photos/id/2/400/300",
+        },
+        {
+          title: "ADERERROR 패키지",
+          category: "Package",
+          img: "https://picsum.photos/id/3/400/300",
+        },
+        {
+          title: "현대적인 미니멀리즘",
+          category: "Interior",
+          img: "https://picsum.photos/id/4/400/300",
+        },
+        {
+          title: "친환경 모바일 앱",
+          category: "UX/UI",
+          img: "https://picsum.photos/id/5/400/300",
+        },
+        {
+          title: "2D 그래픽 강의안",
+          category: "Education",
+          img: "https://picsum.photos/id/6/400/300",
+        },
+      ];
+
+      // ---------------------------------------------
+      // 📌 2. DOM 요소 선택
+      // ---------------------------------------------
+      // HTML에서 id="gallery"인 요소를 가져옴
+      // 이곳에 갤러리 카드들을 넣을 예정
+      const gallery = document.querySelector("#gallery");
+
+      // ---------------------------------------------
+      // 📌 3. HTML을 담을 변수 준비
+      // ---------------------------------------------
+      // 반복문 안에서 HTML을 하나씩 만들고
+      // 마지막에 한 번에 출력하기 위해 문자열 변수 사용
+      let html = "";
+
+      // ---------------------------------------------
+      // 📌 4. 반복문으로 데이터 → HTML 변환
+      // ---------------------------------------------
+      // for...of 반복문:
+      // 배열의 요소를 하나씩 꺼내서 project 변수에 담음
+      for (const project of projectData) {
+        // 템플릿 문자열(`)을 사용하여 HTML 구조 생성
+        // ${} 안에 변수 값을 넣을 수 있음
+        html += `
+      <div class="gallery-item">
+        
+        <!-- 이미지 영역 -->
+        <div class="img-box">
+          <!-- project.img: 이미지 주소 -->
+          <!-- project.title: alt 속성 (이미지 설명) -->
+          <img src="${project.img}" alt="${project.title}">
+        </div>
+
+        <!-- 텍스트 영역 -->
+        <div class="content-box">
+          <!-- 프로젝트 제목 출력 -->
+          <h3>${project.title}</h3>
+
+          <!-- 카테고리 출력 -->
+          <p>${project.category}</p>
+        </div>
+
+      </div>
+    `;
+      }
+
+      // ---------------------------------------------
+      // 📌 5. 화면에 출력 (렌더링)
+      // ---------------------------------------------
+      // 반복문에서 만든 HTML을 한 번에 넣어줌
+      // 👉 성능상 더 효율적인 방식
+      gallery.innerHTML = html;
+    </script>
+  </body>
+</html>
