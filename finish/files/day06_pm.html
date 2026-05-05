@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>6일차 오후 — 모달 + 드롭다운 내비 빈칸 채우기</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --color-primary:#3D1F8F; --color-accent:#FF6B2B; --color-dark:#1a1a2e; --color-white:#fff; --font-display:'Bebas Neue',cursive; --font-body:'Noto Sans KR',sans-serif; --transition:0.3s ease; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:var(--font-body); }
+
+    /* 헤더 */
+    #header { background:var(--color-primary); padding:20px 0; position:sticky; top:0; z-index:1000; }
+    .header-inner { max-width:1200px; margin:0 auto; padding:0 24px; display:flex; align-items:center; justify-content:space-between; }
+    .logo { font-family:var(--font-display); font-size:1.6rem; color:white; letter-spacing:3px; text-decoration:none; }
+    .logo span { color:var(--color-accent); }
+
+    /* =====================================================
+       [STEP 1] 드롭다운 내비 CSS
+       li:hover 시 .dropdown이 보이는 패턴
+       ===================================================== */
+    .nav-list { display:flex; gap:36px; }
+    .nav-list > li { position: ______; }  /* ❶ 드롭다운의 기준점 */
+
+    .nav-list > li > a { color:white; font-size:0.85rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; display:flex; align-items:center; gap:5px; }
+    .nav-list > li.has-dropdown > a::after { content:'▾'; font-size:0.7rem; }
+
+    .dropdown {
+      position: ______;          /* ❷ li 기준으로 배치 */
+      top: calc(100% + 16px);
+      left: 50%;
+      transform: translateX(-50%) translateY(-8px);
+      background: white;
+      border-radius: 10px;
+      padding: 8px 0;
+      min-width: 150px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+      /* =====================================================
+         ❸ 기본 숨김 상태 (display:none 대신!)
+         display:none은 transition이 안 됩니다
+         ===================================================== */
+      opacity: ______;           /* ❸ 숨김 */
+      visibility: ______;        /* ❹ 숨김 (클릭/포커스 차단) */
+      transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+      z-index: 100;
+    }
+
+    /* ❺ li 호버 시 드롭다운 표시 */
+    .nav-list > li.has-dropdown:hover .dropdown {
+      opacity: ______;           /* ❺ 표시 */
+      visibility: ______;        /* ❻ 표시 */
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .dropdown a { display:block; padding:10px 20px; color:var(--color-dark); font-size:0.82rem; font-weight:500; white-space:nowrap; transition:0.15s; }
+    .dropdown a:hover { background:#f5f5f5; color:var(--color-primary); }
+
+    /* 메인 콘텐츠 */
+    #main { height:60vh; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,#3D1F8F,#FF6B2B); }
+    #main h1 { font-family:var(--font-display); font-size:5rem; color:white; letter-spacing:4px; }
+
+    /* 예약 섹션 */
+    #reservation { padding:80px 24px 160px; background:#f5f5f5; display:flex; justify-content:center; }
+    .form-box { background:white; border-radius:12px; padding:40px; width:100%; max-width:480px; box-shadow:0 4px 20px rgba(0,0,0,0.08); }
+    .form-box h2 { font-family:var(--font-body); font-size:1.6rem; font-weight:900; color:var(--color-dark); margin-bottom:24px; }
+    .form-group { margin-bottom:16px; }
+    .form-group label { display:block; font-size:0.85rem; font-weight:700; margin-bottom:6px; }
+    .form-group input { width:100%; padding:11px 14px; border:1.5px solid #ddd; border-radius:8px; font-size:0.9rem; font-family:var(--font-body); outline:none; transition:0.2s; }
+    .form-group input:focus { border-color:var(--color-primary); }
+    .form-group input.valid   { border-color:#52c41a; }
+    .form-group input.invalid { border-color:#ff4d4f; }
+    .form-msg { font-size:0.75rem; margin-top:4px; min-height:16px; }
+    .form-msg.success{color:#52c41a} .form-msg.error{color:#ff4d4f}
+    .btn-submit { width:100%; padding:14px; background:var(--color-primary); color:white; border:none; border-radius:8px; font-size:1rem; font-weight:700; font-family:var(--font-body); cursor:pointer; transition:0.2s; margin-top:8px; }
+    .btn-submit:hover:not(:disabled) { background:#2d1570; }
+    .btn-submit:disabled { background:#ccc; cursor:not-allowed; }
+
+    /* =====================================================
+       [STEP 2] 모달 CSS
+       .active 클래스 추가 시 display:flex로 변경
+       ===================================================== */
+    #modal-bg {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: ______;           /* ❼ 기본: 숨김 */
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+
+    #modal-bg.______ {           /* ❽ active 클래스 추가 시 */
+      display: ______;           /* ❾ flex로 표시 */
+    }
+
+    .modal-box { background:white; border-radius:12px; padding:48px 40px; text-align:center; width:90%; max-width:400px; animation:popUp 0.3s ease; }
+    @keyframes popUp { from{transform:scale(0.8);opacity:0} to{transform:scale(1);opacity:1} }
+    .modal-icon { font-size:3rem; margin-bottom:16px; }
+    .modal-title { font-family:var(--font-body); font-size:1.6rem; font-weight:900; color:var(--color-primary); margin-bottom:8px; }
+    .modal-desc  { color:#888; font-size:0.9rem; line-height:1.6; margin-bottom:28px; }
+    .modal-close { width:100%; padding:12px; background:var(--color-accent); color:white; border:none; border-radius:8px; font-size:0.95rem; font-weight:700; font-family:var(--font-body); cursor:pointer; }
+
+    .guide-bar { background:#fff3cd; border-left:4px solid #FF6B2B; padding:14px 20px; position:fixed; bottom:0; left:0; width:100%; z-index:9999; font-size:0.82rem; color:#555; line-height:1.8; }
+    .guide-bar strong { color:#3D1F8F; }
+  </style>
+</head>
+<body>
+
+  <div class="guide-bar">
+    <strong>📝 오늘의 미션</strong> &nbsp;|&nbsp;
+    CSS: ❶li position ❷dropdown position ❸숨김opacity ❹숨김visibility ❺표시opacity ❻표시visibility ❼모달기본display ❽active클래스 ❾표시display &nbsp;|&nbsp;
+    JS: ❿모달열기 ⓫닫기 ⓬배경닫기 ⓭버블링차단
+  </div>
+
+  <!-- 헤더 (드롭다운 포함) -->
+  <header id="header">
+    <div class="header-inner">
+      <a href="#" class="logo">BREW<span>VENTI</span></a>
+      <nav>
+        <ul class="nav-list">
+          <li class="has-dropdown">
+            <a href="#reservation">MENU</a>
+            <ul class="dropdown">
+              <li><a href="#reservation">커피</a></li>
+              <li><a href="#reservation">스무디</a></li>
+              <li><a href="#reservation">티에이드</a></li>
+            </ul>
+          </li>
+          <li><a href="#reservation">ABOUT</a></li>
+          <li class="has-dropdown">
+            <a href="#reservation">RESERVATION</a>
+            <ul class="dropdown">
+              <li><a href="#reservation">매장 예약</a></li>
+              <li><a href="#reservation">단체 문의</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div id="main"><h1>BREWVENTI</h1></div>
+
+  <!-- 예약 폼 -->
+  <div id="reservation">
+    <div class="form-box">
+      <h2>매장 예약</h2>
+      <div class="form-group">
+        <label>이름</label>
+        <input type="text" id="r-name" placeholder="홍길동" />
+        <div class="form-msg" id="name-msg"></div>
+      </div>
+      <div class="form-group">
+        <label>연락처</label>
+        <input type="tel" id="r-phone" placeholder="010-0000-0000" />
+        <div class="form-msg" id="phone-msg"></div>
+      </div>
+      <button class="btn-submit" id="submitBtn" disabled>예약 신청하기</button>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       모달 HTML
+       배경(#modal-bg) + 박스(.modal-box) 구조
+       ===================================================== -->
+  <div id="modal-bg">
+    <div class="modal-box" id="modalBox">
+      <div class="modal-icon">🎉</div>
+      <h3 class="modal-title">예약 완료!</h3>
+      <p class="modal-desc">예약이 성공적으로 접수되었습니다.<br>방문 전날 확인 연락을 드릴게요.</p>
+      <button class="modal-close" id="modalClose">확인</button>
+    </div>
+  </div>
+
+  <script>
+
+    /* =====================================================
+       유효성 검사 (5일차 복습 — 이미 완성된 코드)
+       ===================================================== */
+    function validateName(v)  { if(!v.length) return{ok:null,msg:''}; if(v.length<2) return{ok:false,msg:'2자 이상 입력해 주세요.'}; return{ok:true,msg:'확인되었습니다.'}; }
+    function validatePhone(v) { if(!v.length) return{ok:null,msg:''}; if(!/^010-\d{4}-\d{4}$/.test(v)) return{ok:false,msg:'010-0000-0000 형식으로 입력해 주세요.'}; return{ok:true,msg:'확인되었습니다.'}; }
+    function updateFormUI(el,msgEl,res) { if(res.ok===null){el.className='';msgEl.className='form-msg';msgEl.textContent='';return;} el.className=res.ok?'valid':'invalid'; msgEl.className=res.ok?'form-msg success':'form-msg error'; msgEl.textContent=res.msg; }
+
+    const nameInput  = document.querySelector('#r-name');
+    const phoneInput = document.querySelector('#r-phone');
+    const submitBtn  = document.querySelector('#submitBtn');
+
+    function checkSubmitable() { submitBtn.disabled = !(validateName(nameInput.value).ok && validatePhone(phoneInput.value).ok); }
+
+    nameInput.addEventListener('input', e => { updateFormUI(nameInput, document.querySelector('#name-msg'), validateName(e.target.value)); checkSubmitable(); });
+    phoneInput.addEventListener('input', e => { updateFormUI(phoneInput, document.querySelector('#phone-msg'), validatePhone(e.target.value)); checkSubmitable(); });
+
+
+    /* =====================================================
+       [JS STEP 1] 모달 요소 선택
+       ===================================================== */
+    const modalBg   = document.querySelector('______');  // ❿ #modal-bg
+    const modalBox  = document.querySelector('______');  // ⓫ #modalBox
+    const modalClose = document.querySelector('______'); // ⓬ #modalClose
+
+
+    /* =====================================================
+       [JS STEP 2] 모달 열기
+       제출 버튼 클릭 시 modalBg에 'active' 클래스 추가
+       ===================================================== */
+    submitBtn.addEventListener('click', () => {
+      modalBg.classList.______('active');   // ⓭ add
+    });
+
+
+    /* =====================================================
+       [JS STEP 3] 모달 닫기 — 닫기 버튼
+       ===================================================== */
+    modalClose.addEventListener('click', () => {
+      modalBg.classList.______('active');   // ⓮ remove
+    });
+
+
+    /* =====================================================
+       [JS STEP 4] 모달 닫기 — 배경 클릭
+       ===================================================== */
+    modalBg.addEventListener('click', () => {
+      modalBg.classList.______('active');   // ⓯ remove
+    });
+
+
+    /* =====================================================
+       [JS STEP 5] 이벤트 버블링 차단
+       모달 박스 내부 클릭이 배경으로 전파되지 않게
+       ===================================================== */
+    modalBox.addEventListener('click', (e) => {
+      e.______();    // ⓰ stopPropagation
+    });
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3일차 오후 — Best Menu 탭 필터 빈칸 채우기</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --color-primary:#3D1F8F; --color-accent:#FF6B2B; --color-dark:#1a1a2e; --color-white:#fff; --font-display:'Bebas Neue',cursive; --font-body:'Noto Sans KR',sans-serif; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:var(--font-body); background:#fff; }
+
+    /* 헤더 */
+    #header { background:var(--color-primary); padding:18px 0; }
+    .header-inner { max-width:1200px; margin:0 auto; padding:0 24px; display:flex; align-items:center; justify-content:space-between; }
+    .logo { font-family:var(--font-display); font-size:1.6rem; color:white; letter-spacing:3px; text-decoration:none; }
+    .logo span { color:var(--color-accent); }
+
+    /* 메뉴 섹션 */
+    #menu { padding:80px 0; }
+    .container { max-width:1200px; margin:0 auto; padding:0 24px; }
+    .section-sub   { font-size:0.9rem; color:#888; margin-bottom:8px; }
+    .section-title { font-family:var(--font-display); font-size:3rem; letter-spacing:2px; color:var(--color-dark); margin-bottom:40px; }
+
+    /* 탭 버튼 */
+    .tab-group { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:40px; }
+    .tab-btn   { padding:10px 22px; border-radius:50px; border:2px solid #ddd; background:transparent; color:#888; font-size:0.85rem; font-weight:700; font-family:var(--font-body); cursor:pointer; transition:0.3s; }
+    .tab-btn.active { background:var(--color-primary); border-color:var(--color-primary); color:white; }
+    .tab-btn:hover:not(.active) { border-color:var(--color-primary); color:var(--color-primary); }
+
+    /* 메뉴 그리드 */
+    .menu-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:24px; }
+    .menu-card { background:#f5f5f5; border-radius:12px; overflow:hidden; cursor:pointer; transition:0.3s; }
+    .menu-card:hover { transform:translateY(-8px); box-shadow:0 4px 20px rgba(0,0,0,0.12); }
+    .card-img  { width:100%; height:200px; object-fit:cover; }
+    .card-body { padding:16px; }
+    .card-category { font-size:0.75rem; color:var(--color-accent); font-weight:700; text-transform:uppercase; margin-bottom:4px; }
+    .card-name  { font-size:1rem; font-weight:700; color:var(--color-dark); margin-bottom:4px; }
+    .card-price { font-size:0.9rem; color:var(--color-primary); font-weight:700; }
+
+    /* 안내 바 */
+    .guide-bar { background:#fff3cd; border-left:4px solid #FF6B2B; padding:14px 20px; position:fixed; bottom:0; left:0; width:100%; z-index:9999; font-size:0.82rem; color:#555; line-height:1.8; }
+    .guide-bar strong { color:var(--color-primary); }
+  </style>
+</head>
+<body>
+
+  <div class="guide-bar">
+    <strong>📝 오늘의 미션</strong> &nbsp;|&nbsp;
+    ❶ menuData 배열 완성 &nbsp;|&nbsp;
+    ❷ filter() 조건 작성 &nbsp;|&nbsp;
+    ❸ for...of + innerHTML 렌더링 &nbsp;|&nbsp;
+    ❹ 탭 클릭 이벤트 연결 &nbsp;|&nbsp;
+    ❺ dataset.category 읽기
+  </div>
+
+  <header id="header">
+    <div class="header-inner">
+      <a href="#" class="logo">BREW<span>VENTI</span></a>
+    </div>
+  </header>
+
+  <section id="menu">
+    <div class="container">
+
+      <p class="section-sub">BEST MENU</p>
+      <h2 class="section-title">OUR DRINKS</h2>
+
+      <!-- 탭 버튼 (data-category 속성에 주목!) -->
+      <div class="tab-group" id="tabGroup">
+        <button class="tab-btn active" data-category="all">전체</button>
+        <button class="tab-btn" data-category="coffee">커피</button>
+        <button class="tab-btn" data-category="smoothie">스무디</button>
+        <button class="tab-btn" data-category="tea">티에이드</button>
+      </div>
+
+      <!-- JS가 채워줄 그리드 -->
+      <div class="menu-grid" id="menuGrid"></div>
+
+    </div>
+  </section>
+
+
+  <script>
+
+    /* =====================================================
+       [STEP 1] 메뉴 데이터 배열
+       객체 배열 형식으로 메뉴 데이터를 작성하세요
+       각 객체는 name, category, price, img 속성을 가집니다
+       ===================================================== */
+    const menuData = [
+      { name: '아메리카노',    category: '______',   price: '3,500원', img: 'https://picsum.photos/id/431/400/400' },  // ❶
+      { name: '카페라떼',      category: 'coffee',   price: '4,500원', img: 'https://picsum.photos/id/425/400/400' },
+      { name: '바닐라라떼',    category: 'coffee',   price: '5,000원', img: 'https://picsum.photos/id/429/400/400' },
+      { name: '딸기 스무디',   category: '______',   price: '5,500원', img: 'https://picsum.photos/id/1080/400/400' }, // ❷
+      { name: '망고 스무디',   category: 'smoothie', price: '5,500원', img: 'https://picsum.photos/id/1084/400/400' },
+      { name: '청포도 에이드', category: '______',   price: '4,800원', img: 'https://picsum.photos/id/493/400/400' },  // ❸
+      { name: '유자 티에이드', category: 'tea',      price: '4,800원', img: 'https://picsum.photos/id/488/400/400' },
+    ];
+
+
+    /* =====================================================
+       [STEP 2] renderMenu 함수
+       category를 받아서 필터링 후 카드를 렌더링합니다
+       ===================================================== */
+    const menuGrid = document.querySelector('#menuGrid');
+
+    function renderMenu(category) {
+
+      // ❹ 'all'이면 전체, 아니면 filter로 해당 카테고리만 추출
+      const filtered = category === '______'    // ❹
+        ? menuData
+        : menuData.______(item => item.______ === category);  // ❺ filter 메서드, ❻ 비교할 속성
+
+      // ❼ 반복문으로 HTML 문자열 생성
+      let html = '______';   // ❼ 빈 문자열로 시작
+
+      for (const item ______ filtered) {    // ❽ for...of
+        html ______ `                       
+          <div class="menu-card">
+            <img class="card-img" src="${item.______}" alt="${item.______}" />
+            <div class="card-body">
+              <p class="card-category">${item.______}</p>
+              <p class="card-name">${item.______}</p>
+              <p class="card-price">${item.______}</p>
+            </div>
+          </div>
+        `;
+        // ❾ item의 속성들을 채우세요: img, name, category, name, price
+      }
+
+      menuGrid.______ = html;  // ❿ 한 번에 삽입하는 속성
+    }
+
+
+    /* =====================================================
+       [STEP 3] 탭 버튼 이벤트
+       querySelectorAll + forEach로 탭 전체에 클릭 이벤트 등록
+       ===================================================== */
+    const tabBtns = document.______('______');  // ⓫ 모든 .tab-btn 선택
+
+    tabBtns.______(btn => {         // ⓬ forEach
+      btn.addEventListener('______', () => {  // ⓭ 이벤트 이름
+
+        // 1. 모든 탭에서 active 제거
+        tabBtns.forEach(b => b.classList.______('active'));  // ⓮ remove
+
+        // 2. 클릭된 탭에 active 추가
+        btn.classList.______('active');  // ⓯ add
+
+        // 3. dataset.category 읽어서 renderMenu 호출
+        const category = btn.dataset.______;  // ⓰ data-category 속성 이름
+        renderMenu(______);                   // ⓱ category 전달
+
+      });
+    });
+
+
+    /* =====================================================
+       [STEP 4] 초기 실행
+       페이지 로드 시 전체 메뉴 표시
+       ===================================================== */
+    renderMenu('______');  // ⓲ 전체 카테고리 값
+
+  </script>
+</body>
+</html>

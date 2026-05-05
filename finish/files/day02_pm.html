@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2일차 오후 — Hero 슬라이더 빈칸 채우기</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --color-primary: #3D1F8F;
+      --color-accent:  #FF6B2B;
+      --color-dark:    #1a1a2e;
+      --color-white:   #ffffff;
+      --font-display:  'Bebas Neue', cursive;
+      --font-body:     'Noto Sans KR', sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-body); }
+
+    /* =====================================================
+       HERO 섹션
+       ===================================================== */
+    #hero {
+      position: relative;
+      height: 100vh;
+      min-height: 600px;
+      overflow: hidden;
+    }
+
+    /* =====================================================
+       [STEP 1] 슬라이더 래퍼
+       ===================================================== */
+    .hero-slider {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* =====================================================
+       [STEP 2] 슬라이드 기본 스타일
+       모든 슬라이드를 같은 자리에 겹쳐놓고
+       active 클래스가 있는 것만 보이게 합니다
+       ===================================================== */
+    .hero-slide {
+      position: ______;     /* ❶ 같은 자리에 겹치게 */
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: ______;      /* ❷ 기본은 안 보이게 */
+      transition: opacity 0.8s ease;
+    }
+
+    /* active 클래스가 붙으면 보임 */
+    .hero-slide.______ {    /* ❸ 클래스 이름 */
+      opacity: ______;      /* ❹ 보이게 */
+    }
+
+    /* 슬라이드별 배경 이미지 */
+    .hero-slide:nth-child(1) { background-image: url('https://picsum.photos/id/431/1600/900'); }
+    .hero-slide:nth-child(2) { background-image: url('https://picsum.photos/id/425/1600/900'); }
+    .hero-slide:nth-child(3) { background-image: url('https://picsum.photos/id/493/1600/900'); }
+
+    /* 어두운 오버레이 */
+    .hero-slide::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, rgba(61,31,143,0.75) 0%, rgba(0,0,0,0.3) 100%);
+    }
+
+    /* =====================================================
+       텍스트 콘텐츠
+       ===================================================== */
+    .hero-content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      z-index: 10;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 8vw, 6rem);
+      color: white;
+      letter-spacing: 4px;
+      line-height: 1;
+      margin-bottom: 20px;
+    }
+
+    .hero-desc {
+      color: rgba(255,255,255,0.85);
+      font-size: 1rem;
+      line-height: 1.8;
+    }
+
+    /* =====================================================
+       [STEP 3] 도트 내비게이션
+       ===================================================== */
+    .hero-dots {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 10;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.4);
+      cursor: pointer;
+      border: none;
+      transition: 0.3s;
+    }
+
+    /* active 도트 스타일 */
+    .dot.active {
+      background: var(--color-accent);
+      width: 24px;
+      border-radius: 4px;
+    }
+
+    /* 안내 바 */
+    .guide-bar {
+      background: #fff3cd;
+      border-left: 4px solid #FF6B2B;
+      padding: 14px 20px;
+      position: fixed;
+      bottom: 0; left: 0; width: 100%;
+      z-index: 9999;
+      font-size: 0.82rem;
+      color: #555;
+      line-height: 1.8;
+    }
+    .guide-bar strong { color: var(--color-primary); }
+  </style>
+</head>
+<body>
+
+  <div class="guide-bar">
+    <strong>📝 오늘의 미션</strong> &nbsp;|&nbsp;
+    CSS: ❶ position ❷ 기본 opacity ❸ active 클래스명 ❹ active 시 opacity &nbsp;|&nbsp;
+    JS: ❺ slides 선택 ❻ dots 선택 ❼ currentSlide 초기값 ❽ goToSlide 내부 로직 ❾ setInterval 간격 ❿ dataset 읽기
+  </div>
+
+
+  <!-- =====================================================
+       HERO HTML
+       ===================================================== -->
+  <section id="hero">
+
+    <!-- 슬라이더 -->
+    <div class="hero-slider" id="heroSlider">
+      <div class="hero-slide active"></div>
+      <div class="hero-slide"></div>
+      <div class="hero-slide"></div>
+    </div>
+
+    <!-- 텍스트 콘텐츠 -->
+    <div class="hero-content">
+      <div>
+        <h1 class="hero-title">COFFEE<br>MADE RIGHT</h1>
+        <p class="hero-desc">취향대로 고르는 원두 한 잔,<br>매일 새롭게 시작하는 당신의 하루</p>
+      </div>
+    </div>
+
+    <!-- 도트 내비게이션 -->
+    <div class="hero-dots" id="heroDots">
+      <button class="dot active" data-index="0"></button>
+      <button class="dot"        data-index="1"></button>
+      <button class="dot"        data-index="2"></button>
+    </div>
+
+  </section>
+
+
+  <script>
+
+    /* =====================================================
+       [JS STEP 1] 요소 선택
+       querySelectorAll로 슬라이드와 도트 전체를 선택하세요
+       ===================================================== */
+    const slides = document.______('______');  // ❺ 모든 .hero-slide 선택
+    const dots   = document.______('______');  // ❻ 모든 .dot 선택
+
+
+    /* =====================================================
+       [JS STEP 2] 현재 슬라이드 번호 변수
+       ===================================================== */
+    let currentSlide = ______;  // ❼ 처음 보이는 슬라이드 번호 (0부터 시작)
+
+
+    /* =====================================================
+       [JS STEP 3] goToSlide 함수
+       특정 번호의 슬라이드로 이동하는 함수
+
+       흐름:
+       1. 현재 슬라이드/도트에서 'active' 제거
+       2. currentSlide를 index로 업데이트
+       3. 새 슬라이드/도트에 'active' 추가
+       ===================================================== */
+    function goToSlide(index) {
+
+      // 1. 현재 슬라이드에서 'active' 제거
+      slides[______].classList.______('active');   // ❽
+      dots[______].classList.______('active');     // ❾
+
+      // 2. 현재 번호 업데이트
+      currentSlide = ______;                       // ❿
+
+      // 3. 새 슬라이드/도트에 'active' 추가
+      slides[______].classList.______('active');   // ⓫
+      dots[______].classList.______('active');     // ⓬
+
+    }
+
+
+    /* =====================================================
+       [JS STEP 4] 자동 전환
+       setInterval로 3초마다 goToSlide 호출
+       나머지 연산(%)으로 마지막 → 첫 번째로 순환
+       ===================================================== */
+    setInterval(() => {
+
+      const next = (currentSlide + 1) % ______;  // ⓭ 전체 슬라이드 수
+      goToSlide(next);
+
+    }, ______);  // ⓮ 3초 = 몇 ms?
+
+
+    /* =====================================================
+       [JS STEP 5] 도트 클릭 이벤트
+       forEach로 각 도트에 클릭 이벤트를 등록하세요
+       data-index 값을 읽어서 goToSlide를 호출합니다
+       ===================================================== */
+    dots.______(dot => {                           // ⓯ forEach
+
+      dot.addEventListener('______', () => {      // ⓰ 이벤트 이름
+
+        const index = Number(dot.dataset.______); // ⓱ data-index 읽기
+        goToSlide(index);
+
+      });
+
+    });
+
+  </script>
+</body>
+</html>

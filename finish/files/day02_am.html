@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2일차 오전 — querySelectorAll · forEach · setInterval · data-*</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --color-primary: #3D1F8F;
+      --color-accent:  #FF6B2B;
+      --color-dark:    #1a1a2e;
+      --font-display:  'Bebas Neue', cursive;
+      --font-body:     'Noto Sans KR', sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-body); background: #f8f8f8; color: var(--color-dark); }
+
+    .page-header { background: var(--color-primary); color: white; padding: 24px 32px; margin-bottom: 32px; }
+    .page-header h1 { font-family: var(--font-display); font-size: 1.6rem; letter-spacing: 2px; margin-bottom: 4px; }
+    .page-header p  { font-size: 0.85rem; opacity: 0.7; }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 0 24px 60px; }
+
+    .practice-card { background: white; border-radius: 12px; padding: 28px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+    .practice-card h2 { font-size: 1rem; font-weight: 700; color: var(--color-primary); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+    .practice-card h2 .num { background: var(--color-accent); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; }
+    .desc { font-size: 0.82rem; color: #888; margin-bottom: 20px; line-height: 1.6; border-left: 3px solid var(--color-accent); padding-left: 10px; }
+    .demo-box { background: #f5f5f5; border-radius: 8px; padding: 20px; margin-top: 12px; }
+    .hint { background: #1a1a2e; color: #a8d8a8; padding: 12px 16px; border-radius: 6px; font-size: 0.8rem; font-family: monospace; margin-top: 12px; line-height: 1.7; }
+    .hint .comment { color: #666; }
+    .hint .keyword { color: #ff9d6c; }
+    .hint .string  { color: #a8d8a8; }
+    .hint .method  { color: #82aaff; }
+
+    /* ===== 실습 1: querySelectorAll + forEach ===== */
+    .menu-card-list {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .menu-card {
+      background: white;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      padding: 12px 18px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    /* JS에서 .selected 클래스 추가 시 */
+    .menu-card.selected {
+      border-color: var(--color-primary);
+      background: var(--color-primary);
+      color: white;
+    }
+
+    #selected-result {
+      font-weight: 700;
+      color: var(--color-primary);
+      font-size: 0.9rem;
+      min-height: 24px;
+    }
+
+    /* ===== 실습 2: setInterval 타이머 ===== */
+    #timer-display {
+      font-family: var(--font-display);
+      font-size: 4rem;
+      letter-spacing: 4px;
+      color: var(--color-primary);
+      text-align: center;
+      padding: 20px 0;
+      transition: color 0.3s;
+    }
+
+    #timer-display.warning { color: var(--color-accent); }
+
+    .timer-btns { display: flex; gap: 8px; justify-content: center; }
+
+    .btn { padding: 10px 20px; border: none; border-radius: 6px; font-family: var(--font-body); font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .btn-primary { background: var(--color-primary); color: white; }
+    .btn-accent  { background: var(--color-accent);  color: white; }
+    .btn-outline { background: transparent; border: 2px solid var(--color-primary); color: var(--color-primary); }
+    .btn:hover   { opacity: 0.85; transform: translateY(-1px); }
+
+    /* ===== 실습 3: data-* 속성 ===== */
+    .category-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .cat-btn {
+      padding: 8px 18px;
+      border: 2px solid #ddd;
+      border-radius: 50px;
+      background: white;
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .cat-btn.active {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: white;
+    }
+
+    #data-result {
+      background: white;
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 0.85rem;
+      line-height: 1.8;
+    }
+
+    #data-result strong { color: var(--color-primary); }
+
+    /* ===== 실습 4: 슬라이더 미니 ===== */
+    .mini-slider-wrap {
+      position: relative;
+      height: 120px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .mini-slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 2rem;
+      letter-spacing: 3px;
+      color: white;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+
+    .mini-slide.active { opacity: 1; }
+    .mini-slide:nth-child(1) { background: var(--color-primary); }
+    .mini-slide:nth-child(2) { background: var(--color-accent); }
+    .mini-slide:nth-child(3) { background: var(--color-dark); }
+
+    .mini-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .mini-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #ddd;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .mini-dot.active {
+      background: var(--color-primary);
+      width: 20px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-header">
+    <h1>DAY 02 — 오전 실습</h1>
+    <p>querySelectorAll · forEach · setInterval · data-* 속성 — BREWVENTI 코드와 연결</p>
+  </div>
+
+  <div class="container">
+
+
+    <!-- 실습 1: querySelectorAll + forEach -->
+    <div class="practice-card">
+      <h2><span class="num">1</span> querySelectorAll + forEach — 메뉴 카드 클릭</h2>
+      <p class="desc">
+        BREWVENTI 탭 버튼에 이벤트를 등록할 때 querySelectorAll + forEach를 사용합니다.<br>
+        카드를 클릭하면 "전체 초기화 → 하나만 활성화" 패턴이 동작합니다.
+      </p>
+
+      <div class="demo-box">
+        <div class="menu-card-list">
+          <div class="menu-card">아메리카노</div>
+          <div class="menu-card">카페라떼</div>
+          <div class="menu-card">딸기 스무디</div>
+          <div class="menu-card">유자 티에이드</div>
+        </div>
+        <div id="selected-result">카드를 클릭하세요</div>
+      </div>
+
+      <div class="hint">
+        <span class="comment">// querySelectorAll: 조건에 맞는 요소 전부 선택 → NodeList 반환</span><br>
+        <span class="keyword">const</span> cards = document.<span class="method">querySelectorAll</span>(<span class="string">'.menu-card'</span>);<br>
+        <br>
+        cards.<span class="method">forEach</span>(card => {<br>
+        &nbsp;&nbsp;card.<span class="method">addEventListener</span>(<span class="string">'click'</span>, () => {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 전체 초기화</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;cards.<span class="method">forEach</span>(c => c.classList.<span class="method">remove</span>(<span class="string">'selected'</span>));<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 클릭된 것만 활성화</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;card.classList.<span class="method">add</span>(<span class="string">'selected'</span>);<br>
+        &nbsp;&nbsp;});<br>
+        });
+      </div>
+    </div>
+
+
+    <!-- 실습 2: setInterval -->
+    <div class="practice-card">
+      <h2><span class="num">2</span> setInterval — 카운트다운 타이머</h2>
+      <p class="desc">
+        BREWVENTI 슬라이더는 setInterval로 3초마다 자동 전환됩니다.<br>
+        타이머를 시작/정지하면서 setInterval과 clearInterval 사용법을 확인하세요.
+      </p>
+
+      <div class="demo-box">
+        <div id="timer-display">10</div>
+        <div class="timer-btns">
+          <button class="btn btn-primary" onclick="startTimer()">시작</button>
+          <button class="btn btn-outline" onclick="stopTimer()">정지</button>
+          <button class="btn btn-accent"  onclick="resetTimer()">리셋</button>
+        </div>
+      </div>
+
+      <div class="hint">
+        <span class="keyword">let</span> count = 10;<br>
+        <span class="keyword">let</span> timerId = <span class="keyword">null</span>; <span class="comment">// ID를 저장해야 정지 가능!</span><br>
+        <br>
+        <span class="comment">// 시작: 1초마다 반복</span><br>
+        timerId = <span class="method">setInterval</span>(() => {<br>
+        &nbsp;&nbsp;count--;<br>
+        &nbsp;&nbsp;<span class="comment">// 화면 업데이트</span><br>
+        }, <span class="string">1000</span>);<br>
+        <br>
+        <span class="comment">// 정지</span><br>
+        <span class="method">clearInterval</span>(timerId);
+      </div>
+    </div>
+
+
+    <!-- 실습 3: data-* 속성 -->
+    <div class="practice-card">
+      <h2><span class="num">3</span> data-* 속성 — 탭 카테고리 읽기</h2>
+      <p class="desc">
+        BREWVENTI 탭 버튼은 data-category 속성으로 카테고리 값을 저장합니다.<br>
+        탭을 클릭하면 dataset으로 값을 읽어서 어떤 카테고리인지 표시합니다.
+      </p>
+
+      <div class="demo-box">
+        <div class="category-tabs">
+          <button class="cat-btn active" data-category="all"      data-label="전체 메뉴">전체</button>
+          <button class="cat-btn"        data-category="coffee"   data-label="커피류">커피</button>
+          <button class="cat-btn"        data-category="smoothie" data-label="스무디류">스무디</button>
+          <button class="cat-btn"        data-category="tea"      data-label="티에이드류">티에이드</button>
+        </div>
+        <div id="data-result">
+          탭을 클릭하면 data-* 속성 값을 읽어옵니다.
+        </div>
+      </div>
+
+      <div class="hint">
+        <span class="comment">// data-category="coffee" → dataset.category → "coffee"</span><br>
+        <span class="comment">// data-label="커피류"    → dataset.label    → "커피류"</span><br>
+        <br>
+        btn.<span class="method">addEventListener</span>(<span class="string">'click'</span>, () => {<br>
+        &nbsp;&nbsp;<span class="keyword">const</span> category = btn.dataset.<span class="method">category</span>; <span class="comment">// 문자열 반환</span><br>
+        &nbsp;&nbsp;<span class="keyword">const</span> label    = btn.dataset.<span class="method">label</span>;<br>
+        });
+      </div>
+    </div>
+
+
+    <!-- 실습 4: 슬라이더 미니 버전 -->
+    <div class="practice-card">
+      <h2><span class="num">4</span> setInterval + data-* 조합 — 미니 슬라이더</h2>
+      <p class="desc">
+        BREWVENTI Hero 슬라이더의 핵심 로직입니다.<br>
+        3초마다 자동 전환 + 도트 클릭으로 수동 이동. 동작을 확인하세요.
+      </p>
+
+      <div class="demo-box">
+        <div class="mini-slider-wrap">
+          <div class="mini-slide active">COFFEE</div>
+          <div class="mini-slide">SMOOTHIE</div>
+          <div class="mini-slide">TEATIME</div>
+        </div>
+        <div class="mini-dots">
+          <button class="mini-dot active" data-index="0"></button>
+          <button class="mini-dot"        data-index="1"></button>
+          <button class="mini-dot"        data-index="2"></button>
+        </div>
+      </div>
+
+      <div class="hint">
+        <span class="keyword">let</span> current = 0;<br>
+        <span class="keyword">const</span> slides = document.<span class="method">querySelectorAll</span>(<span class="string">'.mini-slide'</span>);<br>
+        <span class="keyword">const</span> dots   = document.<span class="method">querySelectorAll</span>(<span class="string">'.mini-dot'</span>);<br>
+        <br>
+        <span class="keyword">function</span> <span class="method">goTo</span>(index) {<br>
+        &nbsp;&nbsp;slides[current].classList.<span class="method">remove</span>(<span class="string">'active'</span>);<br>
+        &nbsp;&nbsp;dots[current].classList.<span class="method">remove</span>(<span class="string">'active'</span>);<br>
+        &nbsp;&nbsp;current = index;<br>
+        &nbsp;&nbsp;slides[current].classList.<span class="method">add</span>(<span class="string">'active'</span>);<br>
+        &nbsp;&nbsp;dots[current].classList.<span class="method">add</span>(<span class="string">'active'</span>);<br>
+        }<br>
+        <br>
+        <span class="comment">// 자동 전환: 나머지 연산(%)으로 0→1→2→0 순환</span><br>
+        <span class="method">setInterval</span>(() => <span class="method">goTo</span>((current + 1) % slides.length), 3000);
+      </div>
+    </div>
+
+
+  </div>
+
+  <script>
+
+    /* ===== 실습 1: querySelectorAll + forEach ===== */
+    const cards  = document.querySelectorAll('.menu-card');
+    const result = document.querySelector('#selected-result');
+
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        // 전체 초기화 → 하나만 활성화 패턴
+        cards.forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        result.textContent = `선택된 메뉴: ${card.textContent}`;
+      });
+    });
+
+
+    /* ===== 실습 2: setInterval 타이머 ===== */
+    let count   = 10;
+    let timerId = null;
+    const timerDisplay = document.querySelector('#timer-display');
+
+    function startTimer() {
+      if (timerId) return; // 이미 실행 중이면 중복 방지
+      timerId = setInterval(() => {
+        count--;
+        timerDisplay.textContent = count;
+        // 3 이하면 주의 색상
+        if (count <= 3) {
+          timerDisplay.classList.add('warning');
+        }
+        // 0이 되면 자동 정지
+        if (count <= 0) {
+          stopTimer();
+          timerDisplay.textContent = '완료!';
+        }
+      }, 1000);
+    }
+
+    function stopTimer() {
+      clearInterval(timerId); // clearInterval로 정지
+      timerId = null;
+    }
+
+    function resetTimer() {
+      stopTimer();
+      count = 10;
+      timerDisplay.textContent = count;
+      timerDisplay.classList.remove('warning');
+    }
+
+
+    /* ===== 실습 3: data-* 속성 ===== */
+    const catBtns   = document.querySelectorAll('.cat-btn');
+    const dataResult = document.querySelector('#data-result');
+
+    catBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // 전체 초기화
+        catBtns.forEach(b => b.classList.remove('active'));
+        // 선택된 것 활성화
+        btn.classList.add('active');
+
+        // dataset으로 값 읽기
+        const category = btn.dataset.category; // data-category 값
+        const label    = btn.dataset.label;    // data-label 값
+
+        dataResult.innerHTML = `
+          <strong>dataset.category</strong> → "${category}"<br>
+          <strong>dataset.label</strong> → "${label}"<br>
+          <strong>타입 확인</strong> → ${typeof category} (dataset은 항상 문자열!)
+        `;
+      });
+    });
+
+
+    /* ===== 실습 4: 미니 슬라이더 ===== */
+    let current    = 0;
+    const slides   = document.querySelectorAll('.mini-slide');
+    const miniDots = document.querySelectorAll('.mini-dot');
+
+    function goTo(index) {
+      // 현재 슬라이드에서 active 제거
+      slides[current].classList.remove('active');
+      miniDots[current].classList.remove('active');
+      // 이동
+      current = index;
+      // 새 슬라이드에 active 추가
+      slides[current].classList.add('active');
+      miniDots[current].classList.add('active');
+    }
+
+    // 3초마다 자동 전환 (나머지 연산으로 순환)
+    setInterval(() => goTo((current + 1) % slides.length), 3000);
+
+    // 도트 클릭
+    miniDots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        goTo(Number(dot.dataset.index)); // 문자열 → 숫자 변환 필수!
+      });
+    });
+
+  </script>
+</body>
+</html>

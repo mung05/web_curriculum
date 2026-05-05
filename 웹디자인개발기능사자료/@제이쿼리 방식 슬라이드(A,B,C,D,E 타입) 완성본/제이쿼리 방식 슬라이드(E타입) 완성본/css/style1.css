@@ -1,0 +1,126 @@
+@charset "utf-8";
+
+body {
+    margin: 0;
+    background-color: #fff;
+    color: #333;
+	font-size: 15px;
+}
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Entire Layout */
+.container {}
+.main-content {
+    display: flex;
+}
+.main-content > div {
+    border: 1px solid #000;
+    /* height: 800px; */
+}
+.left {
+    width: 200px;
+}
+.center {
+    width: 400px;
+}
+.right {
+    /* width: calc(100% - 600px); */
+    flex: 1;
+}
+
+/* Header */
+header {}
+header > div {
+    border: 1px solid red;
+}
+.header-logo {
+    height: 100px;
+}
+.navi {
+    height: 400px;
+}
+.spot-menu {
+    height: 50px;
+}
+
+/* Slide */
+.slide {}
+.slide-image {
+    height: calc(100vh - 120px);
+}
+
+/* Slide */
+.slide {
+    display: flex;
+}
+.slide-image {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+}
+
+.slide-image-inner {
+    /* 실제로 움직이는 요소 */
+    font-size: 0;
+    width: 300%;
+    height: inherit;
+    position: absolute;
+}
+.slide-image-inner a {
+    /* 움직이는 .slide-image-inner에 포함된 요소 */
+    display: inline-block;
+    height: inherit;
+    width: calc(100% / 3);
+}
+.slide-image-inner a img {
+    width: 100%;
+    height: inherit;
+    object-fit: cover;
+}
+
+.items {}
+.items > div {
+    border: 1px solid #000;
+}
+
+/* Shortcut */
+.shortcut {
+    height: 150px;
+}
+/* News & Gallary */
+.news {
+    height: 250px;
+}
+.gallery {
+    height: 250px;
+}
+
+/* Slide Banner */
+.slide-banner {
+    border: 1px solid #000;
+    height: 150px;
+}
+
+/* Footer */
+footer {
+    display: flex;
+}
+footer > div {
+    border: 1px solid blue;
+    height: 120px;
+}
+.footer-logo {
+    width: 200px;
+}
+.footer-content {
+    flex: 1;
+}
+.footer-content div {
+    border: 1px solid red;
+    height: 60px;`
+}
+.footer-link {}
+.copyright {}

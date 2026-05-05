@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>4일차 오전 — IntersectionObserver · CSS :has() · transition 협업</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --color-primary:#3D1F8F; --color-accent:#FF6B2B; --color-dark:#1a1a2e; --font-display:'Bebas Neue',cursive; --font-body:'Noto Sans KR',sans-serif; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:var(--font-body); background:#f8f8f8; color:var(--color-dark); }
+    .page-header { background:var(--color-primary); color:white; padding:24px 32px; margin-bottom:32px; }
+    .page-header h1 { font-family:var(--font-display); font-size:1.6rem; letter-spacing:2px; margin-bottom:4px; }
+    .page-header p { font-size:0.85rem; opacity:0.7; }
+    .container { max-width:900px; margin:0 auto; padding:0 24px 100px; }
+    .practice-card { background:white; border-radius:12px; padding:28px; margin-bottom:24px; box-shadow:0 2px 12px rgba(0,0,0,0.07); }
+    .practice-card h2 { font-size:1rem; font-weight:700; color:var(--color-primary); margin-bottom:6px; display:flex; align-items:center; gap:8px; }
+    .num { background:var(--color-accent); color:white; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0; }
+    .desc { font-size:0.82rem; color:#888; margin-bottom:20px; line-height:1.6; border-left:3px solid var(--color-accent); padding-left:10px; }
+    .demo-box { background:#f5f5f5; border-radius:8px; padding:20px; margin-top:12px; }
+    .hint { background:#1a1a2e; color:#a8d8a8; padding:12px 16px; border-radius:6px; font-size:0.8rem; font-family:monospace; margin-top:12px; line-height:1.7; }
+    .hint .c{color:#666} .hint .k{color:#ff9d6c} .hint .s{color:#a8d8a8} .hint .m{color:#82aaff}
+
+    /* 실습 1: 페이드인 */
+    .spacer { height:60px; background:#eee; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#aaa; font-size:0.8rem; margin-bottom:12px; }
+    .fade-box {
+      background:var(--color-primary); color:white; border-radius:8px; padding:24px;
+      font-family:var(--font-display); font-size:1.5rem; letter-spacing:2px; text-align:center;
+      opacity:0; transform:translateY(30px);
+      transition:opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-box.visible { opacity:1; transform:translateY(0); }
+    .fade-box + .fade-box { margin-top:12px; background:var(--color-accent); }
+
+    /* 실습 2: threshold 비교 */
+    .threshold-wrap { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .t-box { height:100px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.85rem; transition:0.5s; }
+    .t-box.t02 { background:#ddd; color:#aaa; }
+    .t-box.t02.visible { background:var(--color-primary); color:white; }
+    .t-box.t08 { background:#ddd; color:#aaa; }
+    .t-box.t08.visible { background:var(--color-accent); color:white; }
+
+    /* 실습 3: :has() 카드 */
+    .has-demo { display:grid; grid-template-columns:1fr 1fr; gap:0; border-radius:8px; overflow:hidden; height:140px; transition:grid-template-columns 0.4s ease; }
+    .has-demo:has(.has-left:hover)  { grid-template-columns:3fr 1fr; }
+    .has-demo:has(.has-right:hover) { grid-template-columns:1fr 3fr; }
+    .has-left  { background:var(--color-primary); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:1.4rem; color:white; letter-spacing:2px; cursor:pointer; transition:0.4s; }
+    .has-right { background:var(--color-accent);  display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:1.4rem; color:white; letter-spacing:2px; cursor:pointer; transition:0.4s; }
+
+    /* 실습 4: 카드 호버 */
+    .card-hover-demo { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+    .hover-card { background:white; border-radius:8px; padding:16px; text-align:center; font-weight:700; transition:0.3s; cursor:pointer; border:2px solid #eee; }
+    .hover-card:hover { transform:translateY(-8px); box-shadow:0 8px 20px rgba(0,0,0,0.12); border-color:var(--color-primary); color:var(--color-primary); }
+  </style>
+</head>
+<body>
+
+  <div class="page-header">
+    <h1>DAY 04 — 오전 실습</h1>
+    <p>IntersectionObserver · CSS :has() · transition 협업 — BREWVENTI About 섹션의 기반</p>
+  </div>
+
+  <div class="container">
+
+    <!-- 실습 1: IntersectionObserver 페이드인 -->
+    <div class="practice-card">
+      <h2><span class="num">1</span> IntersectionObserver — 스크롤 페이드인</h2>
+      <p class="desc">
+        아래로 스크롤하면 박스가 화면에 들어올 때 나타납니다.<br>
+        BREWVENTI About 섹션에서 사용하는 패턴과 동일합니다.
+      </p>
+      <div class="demo-box">
+        <div class="spacer">↓ 스크롤해보세요</div>
+        <div class="fade-box">BREWVENTI — 첫 번째 박스</div>
+        <div class="fade-box" style="margin-top:12px">BREWVENTI — 두 번째 박스</div>
+      </div>
+      <div class="hint">
+        <span class="k">const</span> observer = <span class="k">new</span> <span class="m">IntersectionObserver</span>((entries) => {<br>
+        &nbsp;&nbsp;entries.<span class="m">forEach</span>(entry => {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="k">if</span> (entry.<span class="m">isIntersecting</span>) { <span class="c">// 화면에 보이면</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;entry.target.classList.<span class="m">add</span>(<span class="s">'visible'</span>);<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+        &nbsp;&nbsp;});<br>
+        }, { threshold: <span class="s">0.3</span> }); <span class="c">// 30% 보일 때 실행</span><br>
+        <br>
+        document.<span class="m">querySelectorAll</span>(<span class="s">'.fade-box'</span>).<span class="m">forEach</span>(el => observer.<span class="m">observe</span>(el));
+      </div>
+    </div>
+
+    <!-- 실습 2: threshold 비교 -->
+    <div class="practice-card">
+      <h2><span class="num">2</span> threshold 0.2 vs 0.8 비교</h2>
+      <p class="desc">
+        왼쪽은 20% 보이면 실행, 오른쪽은 80% 보여야 실행됩니다.<br>
+        스크롤하면서 어느 시점에 활성화되는지 비교하세요.
+      </p>
+      <div class="demo-box">
+        <div class="spacer">↓ 스크롤하면서 비교하세요</div>
+        <div class="threshold-wrap">
+          <div class="t-box t02">threshold: 0.2<br>(20% 보이면 실행)</div>
+          <div class="t-box t08">threshold: 0.8<br>(80% 보여야 실행)</div>
+        </div>
+      </div>
+      <div class="hint">
+        <span class="c">// threshold 값 비교</span><br>
+        { threshold: <span class="s">0</span>   } <span class="c">→ 1픽셀이라도 보이면 즉시</span><br>
+        { threshold: <span class="s">0.2</span> } <span class="c">→ 20% 이상 보이면</span><br>
+        { threshold: <span class="s">0.5</span> } <span class="c">→ 절반 이상 보이면</span><br>
+        { threshold: <span class="s">1</span>   } <span class="c">→ 전체가 다 보여야</span>
+      </div>
+    </div>
+
+    <!-- 실습 3: CSS :has() -->
+    <div class="practice-card">
+      <h2><span class="num">3</span> CSS :has() — JS 없이 호버 인터랙션</h2>
+      <p class="desc">
+        마우스를 올리면 해당 쪽이 넓어집니다.<br>
+        JS 한 줄 없이 CSS :has()만으로 구현한 BREWVENTI About 섹션 패턴입니다.
+      </p>
+      <div class="demo-box">
+        <div class="has-demo">
+          <div class="has-left">MILD</div>
+          <div class="has-right">DARK</div>
+        </div>
+      </div>
+      <div class="hint">
+        <span class="c">/* 기본: 50/50 */</span><br>
+        .has-demo { grid-template-columns: <span class="s">1fr 1fr</span>; transition: <span class="s">0.4s</span>; }<br>
+        <br>
+        <span class="c">/* 왼쪽 호버 시 */</span><br>
+        .has-demo:<span class="m">has</span>(.has-left:<span class="m">hover</span>) { grid-template-columns: <span class="s">3fr 1fr</span>; }<br>
+        <br>
+        <span class="c">/* 오른쪽 호버 시 */</span><br>
+        .has-demo:<span class="m">has</span>(.has-right:<span class="m">hover</span>) { grid-template-columns: <span class="s">1fr 3fr</span>; }
+      </div>
+    </div>
+
+    <!-- 실습 4: transition + transform -->
+    <div class="practice-card">
+      <h2><span class="num">4</span> transition + transform — 카드 호버 효과</h2>
+      <p class="desc">
+        BREWVENTI 메뉴 카드의 호버 효과입니다.<br>
+        CSS transition만으로 부드럽게 움직이는 것을 확인하세요.
+      </p>
+      <div class="demo-box">
+        <div class="card-hover-demo">
+          <div class="hover-card">아메리카노<br><small style="color:#aaa;font-weight:400">3,500원</small></div>
+          <div class="hover-card">카페라떼<br><small style="color:#aaa;font-weight:400">4,500원</small></div>
+          <div class="hover-card">딸기 스무디<br><small style="color:#aaa;font-weight:400">5,500원</small></div>
+        </div>
+      </div>
+      <div class="hint">
+        <span class="c">/* 기본 상태 */</span><br>
+        .card { transition: <span class="s">0.3s</span>; }<br>
+        <br>
+        <span class="c">/* 호버 시 위로 8px 올라감 + 그림자 */</span><br>
+        .card:<span class="m">hover</span> {<br>
+        &nbsp;&nbsp;transform: <span class="m">translateY</span>(<span class="s">-8px</span>);<br>
+        &nbsp;&nbsp;box-shadow: <span class="s">0 8px 20px rgba(0,0,0,0.12)</span>;<br>
+        }
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // 실습 1: 페이드인 Observer
+    const observer1 = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.3 });
+
+    document.querySelectorAll('.fade-box').forEach(el => observer1.observe(el));
+
+    // 실습 2: threshold 비교
+    const obs02 = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.2 });
+
+    const obs08 = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.8 });
+
+    document.querySelectorAll('.t02').forEach(el => obs02.observe(el));
+    document.querySelectorAll('.t08').forEach(el => obs08.observe(el));
+  </script>
+</body>
+</html>

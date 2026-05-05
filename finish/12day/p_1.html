@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      /* style.css */
+      :root {
+        --primary-color: #006633; /* 브루벤티 시그니처 그린 */
+        --transition-speed: 0.3s;
+      }
+
+      header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        transition: var(--transition-speed);
+        z-index: 1000;
+      }
+
+      /* 스크롤 시 추가될 클래스 */
+      header.scrolled {
+        background: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 10px 0;
+      }
+      /* 1. 기본 스타일 초기화 (여백 제거) */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      ul {
+        list-style: none;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+
+      /* 2. 헤더 스타일 정렬 */
+      header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 80px; /* 헤더 높이 고정 */
+        display: flex;
+        align-items: center;
+        background: #fff; /* 초기 배경색 지정 */
+        border-bottom: 1px solid #eee;
+        transition: 0.3s;
+        z-index: 1000;
+      }
+
+      .inner {
+        width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+      }
+
+      .gnb {
+        display: flex;
+        gap: 30px; /* 메뉴 간격 */
+      }
+
+      /* 3. ⭐ 겹침 해결의 핵심: 메인 영역에 상단 여백 추가 */
+      main {
+        padding-top: 80px; /* 헤더 높이만큼 밀어내기 */
+      }
+
+      .visual {
+        height: 500px;
+        background: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 3rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header id="header">
+      <nav class="inner">
+        <h1 class="logo">BREWVENTI</h1>
+        <ul class="gnb">
+          <li><a href="#">About</a></li>
+          <li><a href="#">Menu</a></li>
+          <li><a href="#">Reservation</a></li>
+        </ul>
+        <!-- 햄버거 메뉴 (모바일용) -->
+        <button class="m-menu-btn"><span></span></button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="visual">Hero Section</section>
+      <div style="height: 2000px">스크롤 테스트용 긴 영역</div>
+    </main>
+    <script>
+      // main.js
+      const header = document.querySelector("#header");
+
+      window.addEventListener("scroll", () => {
+        // 사용자가 50px 이상 스크롤했는지 확인
+        if (window.scrollY > 50) {
+          header.classList.add("scrolled"); //[cite: 5]
+        } else {
+          header.classList.remove("scrolled"); //[cite: 5]
+        }
+      });
+    </script>
+  </body>
+</html>

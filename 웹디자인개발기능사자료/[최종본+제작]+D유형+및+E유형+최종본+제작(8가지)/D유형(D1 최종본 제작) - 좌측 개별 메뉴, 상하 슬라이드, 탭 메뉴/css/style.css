@@ -1,0 +1,297 @@
+@charset "utf-8";
+
+body {
+    margin: 0;
+    background-color: #fff;
+    color: #333;
+    font-size: 15px;
+}
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Entire Layout */
+.container {
+    /* border: 1px solid red; */
+}
+.main-content {
+    /* border: 1px solid #000; */
+    display: flex;
+}
+.main-content > div {
+    /* border: 1px solid #000; */
+}
+.left {
+    width: 200px;
+}
+.right {
+    /* width: calc(100% - 200px); */
+    flex: 1;
+}
+
+/* Header */
+header {}
+header > div {}
+.header-logo {
+    height: 100px;
+}
+.navi {
+    height: 400px;
+}
+
+/* Navigation */
+.menu {
+    padding: 0;
+    list-style: none;
+    width: 90%;
+    margin: auto;
+    margin-top: 10px;
+}
+.menu li {
+    box-sizing: border-box;
+    text-align: center;
+    background-color: #fff;
+}
+.menu li > a {
+    display: block;
+    padding: 5px;
+    border: 1px solid #000;
+    transition: 0.5s;
+}
+.menu li:hover > a {
+    background-color: rgb(112, 112, 112);
+    color: #fff;
+}
+.sub-menu {
+    border: 1px solid #000;
+    display: none;
+}
+.sub-menu a {
+    display: block;
+    padding: 5px;
+    transition: 0.5s;
+}
+.sub-menu a:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+}
+
+.spot-menu {
+    text-align: center;
+}
+.spot-menu a:hover {
+    text-decoration: underline;
+}
+.spot-menu a:after {
+    content: '|';
+    margin-left: 7px;
+}
+.spot-menu a:last-child:after {
+    display: none;
+}
+
+/* Slide */
+.slide {
+    height: 400px;
+    position: relative;
+}
+.slide-image {
+    /* border: 1px solid blue; */
+    height: 400px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Slide Animation */
+.slide-image-inner {
+    /* 실제로 움직이는 요소 */
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 0;
+    animation: slide 10s linear infinite;
+    height: inherit;
+}
+.slide-image-inner a {
+    /* 움직이는 .slide-image-inner에 포함된 요소 */
+    height: inherit;
+}
+.slide-image-inner a img {
+    width: 100%;
+    height: inherit;
+    /* 부모요소인 a의 너비에 유동적으로 맞춰지게 하는 속성 */
+    object-fit: cover;
+}
+
+@keyframes slide {
+    0% {
+        top: 0;
+    }
+    30% {
+        top: 0;
+    }
+    35% {
+        top: -400px;
+    }
+    65% {
+        top: -400px;
+    }
+    70% {
+        top: -800px;
+    }
+    95% {
+        top: -800px;
+    }
+    100% {
+        top: 0;
+    }
+}
+
+.slide-banner {
+    position: absolute;
+    top: 0;
+    right: 10px;
+}
+.slide-banner img {
+    width: 150px;
+    display: block;
+}
+
+/* Shortcut */
+.shortcut {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    margin: 0 15px;
+    gap: 25px; 
+}
+
+/* News & Gallery */
+.news-gallery {
+    /* border: 1px solid green; */
+    height: 250px;
+}
+.tab-inner {
+    width: 95%;
+    margin: auto;
+    margin-top: 25px;
+}
+.btn {}
+.btn a {
+    border: 1px solid #000;
+    display: inline-block;
+    width: 100px;
+    text-align: center;
+    padding: 5px;
+    border-radius: 5px 5px 0 0;
+    margin-right: -6px;
+    border-bottom: none;
+    margin-bottom: -1px;
+    background-color: #ddd;
+}
+.btn a.active {
+    background-color: #fff;
+}
+.tabs {}
+.tab1 {
+    border: 1px solid #000;
+    padding: 0 15px;
+}
+.tab1 a {
+    display: block;
+    padding: 5px;
+    border-bottom: 1px dashed #bbb;
+}
+.tab1 a:last-child {
+    border-bottom: none;
+}
+.tab1 a b {
+    float: right;
+    font-weight: normal;
+}
+.tab2 {
+    display: none;
+    border: 1px solid #000;
+    height: 170px;
+    text-align: center;
+    padding-top: 20px;
+    box-sizing: border-box;
+}
+/* ▼ D유형과 E유형 공개도면에 따라 약간의 수정 */
+.tab2 a {
+    display: inline-block;
+    text-align: center;
+    margin: 0 18px;
+}
+.tab2 a img {
+    height: 120px;
+    border-radius: 5px;
+}
+.tab2 a span {
+    display: block;
+}
+
+/* Footer */
+footer {
+    display: flex;
+    align-items: center;
+    height: 100px;
+}
+footer > div {
+    text-align: center;
+}
+.footer-logo {
+    width: 200px;
+}
+.copyright {
+    /* width: calc(100% - 430px); */
+    flex: 1;
+}
+.sns {
+    width: 230px;
+}
+.sns img {
+    width: 50px;
+    border-radius: 5px;
+}
+
+/* Modal */
+.modal {
+    background-color: rgba(0, 0, 0, 0.19);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    display: none;
+}
+.modal-content {
+    width: 450px;
+    background-color: #fff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.13);
+}
+.close-modal {
+    float: right;
+    border: 1px solid #000;
+    padding: 5px 10px;
+}
+/* 이건 하면 좋고 안해도 괜찮습니다. */
+.modal-content h2 {
+    text-align: center;
+    background-color: yellowgreen;
+    color: #fff;
+    padding: 7px;
+}
+.modal-content ol {
+    padding-left: 18px;
+    font-size: 14px;
+    font-weight: 500;
+}

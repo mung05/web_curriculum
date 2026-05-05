@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>5일차 오후 — Reservation 폼 빈칸 채우기</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Pretendard:wght@400;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
+  <style>
+    :root { --color-primary:#3D1F8F; --color-accent:#FF6B2B; --color-dark:#1a1a2e; --font-display:'Bebas Neue',cursive; --font-body:'Pretendard','Noto Sans KR',sans-serif; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:var(--font-body); background:#f5f5f5; }
+
+    #reservation { padding:80px 0 120px; }
+    .container { max-width:1200px; margin:0 auto; padding:0 24px; }
+    .reservation-inner { display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:start; }
+
+    .reservation-info h2 { font-family:var(--font-body); font-size:2.2rem; font-weight:900; color:var(--color-dark); margin-bottom:16px; }
+    .reservation-info p  { color:#888; line-height:1.8; margin-bottom:32px; }
+    .info-item { display:flex; align-items:center; gap:12px; margin-bottom:16px; font-size:0.9rem; }
+    .info-icon { width:40px; height:40px; background:var(--color-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; }
+
+    .reservation-form { background:white; padding:40px; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.08); }
+    .form-group { margin-bottom:20px; }
+    .form-group label { display:block; font-size:0.85rem; font-weight:700; color:var(--color-dark); margin-bottom:8px; }
+    .form-group input, .form-group select, .form-group textarea { width:100%; padding:12px 16px; border:1.5px solid #ddd; border-radius:8px; font-size:0.9rem; font-family:var(--font-body); outline:none; transition:0.2s; }
+    .form-group input:focus, .form-group select:focus { border-color:var(--color-primary); }
+    .form-group input.valid   { border-color:#52c41a; }
+    .form-group input.invalid { border-color:#ff4d4f; }
+    .form-msg { font-size:0.75rem; margin-top:4px; min-height:16px; }
+    .form-msg.success { color:#52c41a; }
+    .form-msg.error   { color:#ff4d4f; }
+    textarea { resize:vertical; min-height:100px; }
+    .btn-submit { width:100%; padding:14px; background:var(--color-primary); color:white; border:none; border-radius:8px; font-size:1rem; font-weight:700; font-family:var(--font-body); cursor:pointer; transition:0.2s; margin-top:8px; }
+    .btn-submit:hover:not(:disabled) { background:#2d1570; transform:translateY(-2px); }
+    .btn-submit:disabled { background:#ccc; cursor:not-allowed; }
+
+    .guide-bar { background:#fff3cd; border-left:4px solid #FF6B2B; padding:14px 20px; position:fixed; bottom:0; left:0; width:100%; z-index:9999; font-size:0.82rem; color:#555; line-height:1.8; }
+    .guide-bar strong { color:#3D1F8F; }
+
+    @media(max-width:768px) { .reservation-inner { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+
+  <div class="guide-bar">
+    <strong>📝 오늘의 미션</strong> &nbsp;|&nbsp;
+    ❶ validateName 조건 완성 &nbsp;|&nbsp; ❷ validatePhone 정규식 완성 &nbsp;|&nbsp;
+    ❸ updateFormUI 클래스 적용 &nbsp;|&nbsp; ❹ checkSubmitable 버튼 제어 &nbsp;|&nbsp;
+    ❺ input 이벤트 연결 &nbsp;|&nbsp; ❻ 모달 열기 연결
+  </div>
+
+  <section id="reservation">
+    <div class="container">
+      <div class="reservation-inner">
+
+        <div class="reservation-info">
+          <p style="font-size:0.9rem;color:#888;margin-bottom:8px;">BOOK A TABLE</p>
+          <h2>매장 예약</h2>
+          <p>특별한 날, 미리 자리를 예약하세요.<br>편안한 공간에서 더 특별한 경험을 드립니다.</p>
+          <div class="info-item"><div class="info-icon">🕐</div><div><strong>영업시간</strong><br>평일 08:00–22:00 / 주말 09:00–23:00</div></div>
+          <div class="info-item"><div class="info-icon">📍</div><div><strong>위치</strong><br>인천광역시 연수구 송도동 123-45</div></div>
+          <div class="info-item"><div class="info-icon">📞</div><div><strong>전화</strong><br>032-000-0000</div></div>
+        </div>
+
+        <div class="reservation-form">
+          <div class="form-group">
+            <label for="r-name">이름</label>
+            <input type="text" id="r-name" placeholder="홍길동" />
+            <div class="form-msg" id="name-msg"></div>
+          </div>
+          <div class="form-group">
+            <label for="r-phone">연락처</label>
+            <input type="tel" id="r-phone" placeholder="010-0000-0000" />
+            <div class="form-msg" id="phone-msg"></div>
+          </div>
+          <div class="form-group">
+            <label for="r-date">방문일</label>
+            <input type="date" id="r-date" />
+          </div>
+          <div class="form-group">
+            <label for="r-people">인원</label>
+            <select id="r-people">
+              <option value="">선택하세요</option>
+              <option>1명</option><option>2명</option><option>3명</option><option>4명</option><option>5명 이상</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="r-memo">요청사항 (선택)</label>
+            <textarea id="r-memo" placeholder="창가 자리 원합니다 등..."></textarea>
+          </div>
+          <button class="btn-submit" id="submitBtn" disabled>예약 신청하기</button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 모달 -->
+  <div id="modal-bg" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);display:none;justify-content:center;align-items:center;z-index:2000;">
+    <div id="modal-box" style="background:white;border-radius:12px;padding:48px 40px;text-align:center;width:90%;max-width:400px;">
+      <div style="font-size:3rem;margin-bottom:16px;">🎉</div>
+      <h3 style="font-family:var(--font-body);font-size:1.6rem;font-weight:900;color:var(--color-primary);margin-bottom:8px;">예약 완료!</h3>
+      <p style="color:#888;font-size:0.9rem;line-height:1.6;margin-bottom:28px;">예약이 성공적으로 접수되었습니다.<br>방문 전날 확인 연락을 드릴게요.</p>
+      <button id="modalClose" style="width:100%;padding:12px;background:var(--color-accent);color:white;border:none;border-radius:8px;font-size:0.95rem;font-weight:700;font-family:var(--font-body);cursor:pointer;">확인</button>
+    </div>
+  </div>
+
+  <script>
+
+    /* =====================================================
+       [STEP 1] 이름 유효성 검사 함수
+       결과 객체 { ok, msg } 를 반환합니다
+       ===================================================== */
+    function validateName(value) {
+      if (value.______ === 0)  return { ok: ______, msg: '' };        // ❶ 빈 값 체크
+      if (value.______ < 2)   return { ok: ______, msg: '이름을 2자 이상 입력해 주세요.' }; // ❷ 짧은 값
+      return { ok: ______, msg: '확인되었습니다.' };                   // ❸ 통과
+    }
+
+
+    /* =====================================================
+       [STEP 2] 전화번호 유효성 검사 함수 (정규식 사용)
+       ===================================================== */
+    function validatePhone(value) {
+      if (value.length === 0) return { ok: null, msg: '' };
+      const regex = /______/;     // ❹ 010-0000-0000 패턴 정규식
+      if (!regex.______(value))   // ❺ 정규식 검사 메서드
+        return { ok: false, msg: '010-0000-0000 형식으로 입력해 주세요.' };
+      return { ok: true, msg: '확인되었습니다.' };
+    }
+
+
+    /* =====================================================
+       [STEP 3] UI 업데이트 함수
+       결과 객체를 받아서 입력창과 메시지를 업데이트합니다
+       ===================================================== */
+    function updateFormUI(inputEl, msgEl, result) {
+      if (result.ok === null) {
+        inputEl.className = '';
+        msgEl.className   = 'form-msg';
+        msgEl.textContent = '';
+        return;
+      }
+      inputEl.className = result.ok ? '______' : '______';         // ❻ valid / invalid
+      msgEl.className   = result.ok ? 'form-msg ______' : 'form-msg ______'; // ❼ success / error
+      msgEl.textContent = result.______;                            // ❽ 메시지 출력
+    }
+
+
+    /* =====================================================
+       [STEP 4] 버튼 활성화 체크
+       ===================================================== */
+    const submitBtn = document.querySelector('#submitBtn');
+
+    function checkSubmitable() {
+      const nameOk  = validateName(nameInput.value).______;    // ❾ ok 속성
+      const phoneOk = validatePhone(phoneInput.value).______;  // ❿
+      submitBtn.______ = !(nameOk && phoneOk);                 // ⓫ disabled 속성
+    }
+
+
+    /* =====================================================
+       [STEP 5] 요소 선택 + 이벤트 연결
+       ===================================================== */
+    const nameInput  = document.querySelector('#r-name');
+    const phoneInput = document.querySelector('#r-phone');
+    const nameMsgEl  = document.querySelector('#name-msg');
+    const phoneMsgEl = document.querySelector('#phone-msg');
+
+    nameInput.addEventListener('______', (e) => {   // ⓬ 실시간 이벤트 이름
+      const result = validateName(e.target.value);
+      updateFormUI(nameInput, nameMsgEl, result);
+      checkSubmitable();
+    });
+
+    phoneInput.addEventListener('______', (e) => {  // ⓭
+      const result = validatePhone(e.target.value);
+      updateFormUI(phoneInput, phoneMsgEl, result);
+      checkSubmitable();
+    });
+
+
+    /* =====================================================
+       [STEP 6] 모달 열기/닫기
+       ===================================================== */
+    const modalBg   = document.querySelector('#modal-bg');
+    const modalBox  = document.querySelector('#modal-box');
+    const modalClose = document.querySelector('#modalClose');
+
+    submitBtn.addEventListener('click', () => {
+      modalBg.style.display = '______';   // ⓮ flex로 표시
+    });
+
+    modalClose.addEventListener('click', () => {
+      modalBg.style.display = '______';   // ⓯ 숨기기
+    });
+
+    modalBg.addEventListener('click', () => {
+      modalBg.style.display = 'none';
+    });
+
+    modalBox.addEventListener('click', (e) => {
+      e.______();    // ⓰ 버블링 차단 메서드
+    });
+
+  </script>
+</body>
+</html>

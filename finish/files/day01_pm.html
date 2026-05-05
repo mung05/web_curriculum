@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1일차 오후 — Header 빈칸 채우기</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --color-primary: #3D1F8F;
+      --color-accent:  #FF6B2B;
+      --color-dark:    #1a1a2e;
+      --color-white:   #ffffff;
+      --font-display:  'Bebas Neue', cursive;
+      --font-body:     'Noto Sans KR', sans-serif;
+      --transition:    0.3s ease;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-body); }
+    img  { max-width: 100%; display: block; }
+    a    { text-decoration: none; color: inherit; }
+    ul   { list-style: none; }
+
+    /* =====================================================
+       [STEP 1] 헤더 고정 스타일
+       position: fixed 로 스크롤해도 상단에 고정
+       ===================================================== */
+    #header {
+      position: ______;     /* ❶ 스크롤해도 따라다니게 */
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      padding: 20px 0;
+      transition: padding 0.3s ease, box-shadow 0.3s ease;
+      background: var(--color-primary);
+    }
+
+    /* =====================================================
+       [STEP 2] .scrolled 클래스 스타일
+       JS에서 이 클래스를 추가/제거해서 스타일을 바꿉니다
+       ===================================================== */
+    #header.______ {           /* ❷ 스크롤 후 적용될 클래스 이름 */
+      padding: 14px 0;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      color: white;
+      letter-spacing: 3px;
+    }
+
+    .logo span { color: var(--color-accent); }
+
+    .nav-list {
+      display: flex;
+      gap: 36px;
+    }
+
+    .nav-list a {
+      color: white;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* =====================================================
+       [STEP 3] 햄버거 버튼 스타일
+       ===================================================== */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: white;
+      transition: var(--transition);
+    }
+
+    /* active 클래스 추가 시 X 모양으로 변환 */
+    .hamburger.active span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger.active span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    /* =====================================================
+       [STEP 4] 모바일 메뉴 패널
+       right: -100% 로 화면 밖에 숨겼다가
+       .open 클래스 추가 시 right: 0 으로 슬라이드 인
+       ===================================================== */
+    .nav-mobile {
+      display: flex;
+      position: fixed;
+      top: 0;
+      right: ______;          /* ❸ 처음엔 화면 밖에 숨기기 */
+      width: 260px;
+      height: 100vh;
+      background: var(--color-primary);
+      padding: 80px 32px;
+      flex-direction: column;
+      gap: 32px;
+      z-index: 999;
+      transition: right var(--transition);
+      visibility: hidden;
+    }
+
+    .nav-mobile.______ {       /* ❹ 열렸을 때 클래스 이름 */
+      right: 0;
+      visibility: visible;
+    }
+
+    .nav-mobile a {
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    /* 모바일 배경 오버레이 */
+    .overlay-mobile {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 998;
+    }
+
+    .overlay-mobile.show { display: block; }
+
+    /* 히어로 (스크롤 테스트용) */
+    #hero {
+      height: 100vh;
+      background: linear-gradient(135deg, #3D1F8F 0%, #FF6B2B 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-family: var(--font-display);
+      font-size: 5rem;
+      letter-spacing: 4px;
+    }
+
+    #content {
+      padding: 80px 24px;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+      font-size: 1rem;
+      color: #555;
+      line-height: 2;
+    }
+
+    /* 반응형 */
+    @media (max-width: 768px) {
+      .nav-list  { display: none; }
+      .hamburger { display: flex; }
+    }
+
+    /* =====================================================
+       빈칸 안내 스타일
+       ===================================================== */
+    .guide-bar {
+      background: #fff3cd;
+      border-left: 4px solid #FF6B2B;
+      padding: 14px 20px;
+      margin: 0;
+      font-size: 0.82rem;
+      line-height: 1.8;
+      color: #555;
+    }
+
+    .guide-bar strong { color: var(--color-primary); }
+  </style>
+</head>
+<body>
+
+  <!-- 안내 바 -->
+  <div class="guide-bar" style="position:fixed;bottom:0;left:0;width:100%;z-index:9999;">
+    <strong>📝 오늘의 미션</strong> &nbsp;|&nbsp;
+    ❶ <code>position: ______</code> 채우기 &nbsp;|&nbsp;
+    ❷ <code>#header.______</code> 클래스 이름 &nbsp;|&nbsp;
+    ❸ <code>right: ______</code> 초기값 &nbsp;|&nbsp;
+    ❹ <code>.nav-mobile.______</code> 열림 클래스 &nbsp;|&nbsp;
+    ❺~❽ JS 빈칸 채우기
+  </div>
+
+
+  <!-- =====================================================
+       HEADER HTML
+       ===================================================== -->
+  <header id="header">
+    <div class="header-inner">
+
+      <a href="#" class="logo">BREW<span>VENTI</span></a>
+
+      <!-- 데스크탑 내비 -->
+      <nav>
+        <ul class="nav-list">
+          <li><a href="#hero">HOME</a></li>
+          <li><a href="#content">MENU</a></li>
+          <li><a href="#content">ABOUT</a></li>
+        </ul>
+      </nav>
+
+      <!-- 햄버거 버튼 -->
+      <button class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+    </div>
+  </header>
+
+  <!-- 모바일 메뉴 패널 -->
+  <nav class="nav-mobile" id="navMobile">
+    <a href="#hero"    onclick="closeMobileNav()">HOME</a>
+    <a href="#content" onclick="closeMobileNav()">MENU</a>
+    <a href="#content" onclick="closeMobileNav()">ABOUT</a>
+  </nav>
+
+  <!-- 오버레이 -->
+  <div class="overlay-mobile" id="overlayMobile" onclick="closeMobileNav()"></div>
+
+
+  <!-- 히어로 (스크롤 확인용) -->
+  <div id="hero">BREWVENTI</div>
+
+  <!-- 콘텐츠 (스크롤 확인용) -->
+  <div id="content">
+    <h2 style="font-family:'Bebas Neue';font-size:2rem;letter-spacing:2px;margin-bottom:20px;">스크롤을 내려보세요</h2>
+    <p>스크롤하면 헤더에 box-shadow가 생기고 패딩이 줄어듭니다.<br>
+    개발자 도구(F12) → Elements에서 header에 'scrolled' 클래스가 추가/제거되는 것을 확인하세요.</p>
+    <br><br><br><br><br><br>
+  </div>
+
+
+  <script>
+
+    /* =====================================================
+       [JS STEP 1] 요소 선택
+       querySelector로 필요한 요소를 선택하세요
+       ===================================================== */
+    const header       = document.______('______');   // ❺ header 선택
+    const hamburger    = document.______('______');   // ❻ 햄버거 버튼 선택
+    const navMobile    = document.______('______');   // ❼ 모바일 메뉴 선택
+    const overlayMobile = document.______('______');  // ❽ 오버레이 선택
+
+
+    /* =====================================================
+       [JS STEP 2] 스크롤 감지
+       window에 scroll 이벤트를 등록하고
+       scrollY 값에 따라 헤더에 클래스를 추가/제거하세요
+       ===================================================== */
+    window.addEventListener('______', () => {  // ❾ 이벤트 이름
+
+      if (window.______ > 50) {                // ❿ 스크롤 위치 값
+        header.classList.______('scrolled');   // ⓫ 클래스 추가 메서드
+      } else {
+        header.classList.______('scrolled');   // ⓬ 클래스 제거 메서드
+      }
+
+    });
+
+
+    /* =====================================================
+       [JS STEP 3] 햄버거 메뉴 열기/닫기
+       버튼 클릭 시 세 요소에 각각 클래스를 toggle 하세요
+       ===================================================== */
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.______('active');    // ⓭ toggle 메서드
+      navMobile.classList.______('open');      // ⓮
+      overlayMobile.classList.______('show'); // ⓯
+    });
+
+
+    /* =====================================================
+       [JS STEP 4] 모바일 메뉴 닫기 함수
+       세 요소에서 각각 클래스를 remove 하세요
+       ===================================================== */
+    function closeMobileNav() {
+      hamburger.classList.______('active');    // ⓰ remove 메서드
+      navMobile.classList.______('open');      // ⓱
+      overlayMobile.classList.______('show'); // ⓲
+    }
+
+  </script>
+</body>
+</html>

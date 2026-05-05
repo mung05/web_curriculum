@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>5일차 오전 — 정규식 · 함수 분리 · disabled · input 이벤트</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --color-primary:#3D1F8F; --color-accent:#FF6B2B; --color-dark:#1a1a2e; --font-display:'Bebas Neue',cursive; --font-body:'Noto Sans KR',sans-serif; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:var(--font-body); background:#f8f8f8; color:var(--color-dark); }
+    .page-header { background:var(--color-primary); color:white; padding:24px 32px; margin-bottom:32px; }
+    .page-header h1 { font-family:var(--font-display); font-size:1.6rem; letter-spacing:2px; margin-bottom:4px; }
+    .page-header p  { font-size:0.85rem; opacity:0.7; }
+    .container { max-width:900px; margin:0 auto; padding:0 24px 100px; }
+    .practice-card { background:white; border-radius:12px; padding:28px; margin-bottom:24px; box-shadow:0 2px 12px rgba(0,0,0,0.07); }
+    .practice-card h2 { font-size:1rem; font-weight:700; color:var(--color-primary); margin-bottom:6px; display:flex; align-items:center; gap:8px; }
+    .num { background:var(--color-accent); color:white; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0; }
+    .desc { font-size:0.82rem; color:#888; margin-bottom:20px; line-height:1.6; border-left:3px solid var(--color-accent); padding-left:10px; }
+    .demo-box { background:#f5f5f5; border-radius:8px; padding:20px; margin-top:12px; }
+    .hint { background:#1a1a2e; color:#a8d8a8; padding:12px 16px; border-radius:6px; font-size:0.8rem; font-family:monospace; margin-top:12px; line-height:1.7; }
+    .hint .c{color:#666} .hint .k{color:#ff9d6c} .hint .s{color:#a8d8a8} .hint .m{color:#82aaff}
+
+    /* 입력 필드 공통 */
+    .field { margin-bottom:16px; }
+    .field label { display:block; font-size:0.85rem; font-weight:700; margin-bottom:6px; }
+    .field input { width:100%; padding:11px 14px; border:1.5px solid #ddd; border-radius:8px; font-size:0.9rem; font-family:var(--font-body); outline:none; transition:0.2s; }
+    .field input:focus { border-color:var(--color-primary); }
+    .field input.valid   { border-color:#52c41a; background:#f6ffed; }
+    .field input.invalid { border-color:#ff4d4f; background:#fff5f5; }
+    .msg { font-size:0.75rem; margin-top:4px; min-height:16px; }
+    .msg.success { color:#52c41a; }
+    .msg.error   { color:#ff4d4f; }
+
+    /* 정규식 테스터 */
+    .regex-result { font-size:1.2rem; font-weight:700; text-align:center; padding:12px; border-radius:8px; margin-top:10px; transition:0.3s; }
+    .regex-result.pass { background:#f6ffed; color:#52c41a; }
+    .regex-result.fail { background:#fff5f5; color:#ff4d4f; }
+
+    /* 버튼 */
+    .btn { padding:12px 24px; border:none; border-radius:8px; font-family:var(--font-body); font-size:0.9rem; font-weight:700; cursor:pointer; transition:0.2s; }
+    .btn-primary  { background:var(--color-primary); color:white; }
+    .btn-primary:disabled { background:#ccc; cursor:not-allowed; }
+    .btn-primary:hover:not(:disabled) { background:#2d1570; }
+
+    /* disabled 비교 */
+    .disabled-demo { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .disabled-box  { background:white; border-radius:8px; padding:16px; text-align:center; }
+    .disabled-box p { font-size:0.8rem; color:#888; margin-bottom:10px; }
+  </style>
+</head>
+<body>
+
+  <div class="page-header">
+    <h1>DAY 05 — 오전 실습</h1>
+    <p>정규식 · 함수 분리 · disabled · input 이벤트 — BREWVENTI 예약 폼의 기반</p>
+  </div>
+
+  <div class="container">
+
+    <!-- 실습 1: 정규식 테스터 -->
+    <div class="practice-card">
+      <h2><span class="num">1</span> 정규식 — 실시간 패턴 검사</h2>
+      <p class="desc">
+        BREWVENTI 예약 폼에서 전화번호를 검사할 때 정규식을 사용합니다.<br>
+        010-0000-0000 형식으로 입력해보세요.
+      </p>
+      <div class="demo-box">
+        <div class="field">
+          <label>전화번호 입력</label>
+          <input type="tel" id="phone-test" placeholder="010-0000-0000" />
+        </div>
+        <div class="regex-result fail" id="regex-result">형식이 맞지 않습니다</div>
+      </div>
+      <div class="hint">
+        <span class="k">const</span> regex = <span class="s">/^010-\d{4}-\d{4}$/</span>;<br>
+        <br>
+        <span class="c">// 패턴 분해</span><br>
+        ^ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ 문자열 시작<br>
+        010- &nbsp;→ "010-" 그대로<br>
+        \d &nbsp;&nbsp;&nbsp;→ 숫자 한 자리 (0~9)<br>
+        {4} &nbsp;&nbsp;→ 앞 패턴 4번 반복<br>
+        $ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ 문자열 끝<br>
+        <br>
+        regex.<span class="m">test</span>(<span class="s">'010-1234-5678'</span>) <span class="c">→ true</span><br>
+        regex.<span class="m">test</span>(<span class="s">'01012345678'</span>)  <span class="c">→ false</span>
+      </div>
+    </div>
+
+    <!-- 실습 2: 함수 분리 패턴 -->
+    <div class="practice-card">
+      <h2><span class="num">2</span> 함수 분리 — 검사 로직 vs UI 로직</h2>
+      <p class="desc">
+        BREWVENTI 폼은 검사 함수(validate)와 화면 함수(updateUI)를 분리합니다.<br>
+        이름을 입력하면 두 함수가 순서대로 실행됩니다.
+      </p>
+      <div class="demo-box">
+        <div class="field">
+          <label>이름 (2자 이상)</label>
+          <input type="text" id="name-input" placeholder="이름을 입력하세요" />
+          <div class="msg" id="name-msg"></div>
+        </div>
+        <div style="font-size:0.82rem;color:#aaa;margin-top:8px;" id="func-log"></div>
+      </div>
+      <div class="hint">
+        <span class="c">// 1. 검사만 담당 (화면 변경 X)</span><br>
+        <span class="k">function</span> <span class="m">validateName</span>(value) {<br>
+        &nbsp;&nbsp;<span class="k">if</span> (value.length === 0) <span class="k">return</span> { ok: <span class="k">null</span>, msg: <span class="s">''</span> };<br>
+        &nbsp;&nbsp;<span class="k">if</span> (value.length &lt; 2)  <span class="k">return</span> { ok: <span class="k">false</span>, msg: <span class="s">'2자 이상 입력'</span> };<br>
+        &nbsp;&nbsp;<span class="k">return</span> { ok: <span class="k">true</span>, msg: <span class="s">'확인되었습니다'</span> };<br>
+        }<br>
+        <br>
+        <span class="c">// 2. 화면만 담당 (검사 X)</span><br>
+        <span class="k">function</span> <span class="m">updateUI</span>(inputEl, msgEl, result) { ... }
+      </div>
+    </div>
+
+    <!-- 실습 3: disabled 비교 -->
+    <div class="practice-card">
+      <h2><span class="num">3</span> disabled — 버튼 활성화 조건 제어</h2>
+      <p class="desc">
+        BREWVENTI 예약 버튼은 이름과 전화번호가 모두 유효할 때만 활성화됩니다.<br>
+        disabled 버튼과 활성화 버튼의 차이를 확인하세요.
+      </p>
+      <div class="demo-box">
+        <div class="disabled-demo">
+          <div class="disabled-box">
+            <p>disabled = true (비활성)</p>
+            <button class="btn btn-primary" disabled>예약 신청하기</button>
+          </div>
+          <div class="disabled-box">
+            <p>disabled = false (활성)</p>
+            <button class="btn btn-primary">예약 신청하기</button>
+          </div>
+        </div>
+      </div>
+      <div class="hint">
+        <span class="c">// 비활성화</span><br>
+        button.<span class="m">disabled</span> = <span class="k">true</span>;<br>
+        <br>
+        <span class="c">// 활성화</span><br>
+        button.<span class="m">disabled</span> = <span class="k">false</span>;<br>
+        <br>
+        <span class="c">// 조건으로 한 번에</span><br>
+        button.<span class="m">disabled</span> = !(nameOk && phoneOk);
+      </div>
+    </div>
+
+    <!-- 실습 4: 완성 패턴 (이름+전화 동시 검사) -->
+    <div class="practice-card">
+      <h2><span class="num">4</span> 완성 패턴 — 두 조건 충족 시 버튼 활성화</h2>
+      <p class="desc">
+        BREWVENTI 폼의 완성 패턴입니다.<br>
+        이름(2자 이상)과 전화번호(010-XXXX-XXXX) 모두 유효할 때 버튼이 활성화됩니다.
+      </p>
+      <div class="demo-box">
+        <div class="field">
+          <label>이름</label>
+          <input type="text" id="r-name2" placeholder="홍길동" />
+          <div class="msg" id="name2-msg"></div>
+        </div>
+        <div class="field">
+          <label>전화번호</label>
+          <input type="tel" id="r-phone2" placeholder="010-0000-0000" />
+          <div class="msg" id="phone2-msg"></div>
+        </div>
+        <button class="btn btn-primary" id="submit-btn" disabled>예약 신청하기</button>
+      </div>
+      <div class="hint">
+        <span class="k">function</span> <span class="m">checkSubmitable</span>() {<br>
+        &nbsp;&nbsp;<span class="k">const</span> nameOk  = <span class="m">validateName</span>(nameInput.value).ok;<br>
+        &nbsp;&nbsp;<span class="k">const</span> phoneOk = <span class="m">validatePhone</span>(phoneInput.value).ok;<br>
+        &nbsp;&nbsp;submitBtn.<span class="m">disabled</span> = !(nameOk && phoneOk);<br>
+        }
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+
+    /* ===== 실습 1: 정규식 테스터 ===== */
+    const phoneRegex = /^010-\d{4}-\d{4}$/;
+
+    document.querySelector('#phone-test').addEventListener('input', (e) => {
+      const value = e.target.value;
+      const result = document.querySelector('#regex-result');
+
+      if (phoneRegex.test(value)) {
+        result.textContent = '✅ 형식이 맞습니다!';
+        result.className = 'regex-result pass';
+      } else {
+        result.textContent = value.length === 0 ? '형식이 맞지 않습니다' : '❌ 010-0000-0000 형식으로 입력하세요';
+        result.className = 'regex-result fail';
+      }
+    });
+
+
+    /* ===== 실습 2: 함수 분리 ===== */
+    function validateName(value) {
+      if (value.length === 0) return { ok: null,  msg: '' };
+      if (value.length < 2)  return { ok: false, msg: '이름을 2자 이상 입력해 주세요.' };
+      return { ok: true, msg: '확인되었습니다.' };
+    }
+
+    function updateUI(inputEl, msgEl, result) {
+      if (result.ok === null) {
+        inputEl.className = '';
+        msgEl.className   = 'msg';
+        msgEl.textContent = '';
+        return;
+      }
+      inputEl.className = result.ok ? 'valid' : 'invalid';
+      msgEl.className   = result.ok ? 'msg success' : 'msg error';
+      msgEl.textContent = result.msg;
+    }
+
+    const nameInput = document.querySelector('#name-input');
+    const nameMsg   = document.querySelector('#name-msg');
+    const funcLog   = document.querySelector('#func-log');
+
+    nameInput.addEventListener('input', (e) => {
+      const result = validateName(e.target.value);   // 1. 검사
+      updateUI(nameInput, nameMsg, result);           // 2. 화면 반영
+      funcLog.textContent = `validateName() → { ok: ${result.ok}, msg: "${result.msg}" }`;
+    });
+
+
+    /* ===== 실습 4: 완성 패턴 ===== */
+    function validateName2(value) {
+      if (value.length === 0) return { ok: null,  msg: '' };
+      if (value.length < 2)  return { ok: false, msg: '2자 이상 입력해 주세요.' };
+      return { ok: true, msg: '확인되었습니다.' };
+    }
+
+    function validatePhone2(value) {
+      if (value.length === 0) return { ok: null,  msg: '' };
+      if (!/^010-\d{4}-\d{4}$/.test(value)) return { ok: false, msg: '010-0000-0000 형식으로 입력해 주세요.' };
+      return { ok: true, msg: '확인되었습니다.' };
+    }
+
+    function updateUI2(inputEl, msgEl, result) {
+      if (result.ok === null) { inputEl.className=''; msgEl.className='msg'; msgEl.textContent=''; return; }
+      inputEl.className = result.ok ? 'valid' : 'invalid';
+      msgEl.className   = result.ok ? 'msg success' : 'msg error';
+      msgEl.textContent = result.msg;
+    }
+
+    const rName2  = document.querySelector('#r-name2');
+    const rPhone2 = document.querySelector('#r-phone2');
+    const name2Msg  = document.querySelector('#name2-msg');
+    const phone2Msg = document.querySelector('#phone2-msg');
+    const submitBtn = document.querySelector('#submit-btn');
+
+    function checkSubmitable() {
+      const nameOk  = validateName2(rName2.value).ok;
+      const phoneOk = validatePhone2(rPhone2.value).ok;
+      submitBtn.disabled = !(nameOk && phoneOk);
+    }
+
+    rName2.addEventListener('input', (e) => {
+      updateUI2(rName2, name2Msg, validateName2(e.target.value));
+      checkSubmitable();
+    });
+
+    rPhone2.addEventListener('input', (e) => {
+      updateUI2(rPhone2, phone2Msg, validatePhone2(e.target.value));
+      checkSubmitable();
+    });
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,328 @@
+@charset "utf-8";
+
+body {
+    margin: 0;
+    background-color: #fff;
+    color: #333;
+	font-size: 15px;
+}
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Entire Layout */
+.container {}
+.main-content {
+    display: flex;
+}
+.main-content > div {}
+.left {
+    width: 200px;
+}
+.right {
+    flex: 1;
+}
+
+/* Header */
+header {
+    position: relative;
+    z-index: 1000;
+}
+header > div {}
+.header-logo {
+    height: 100px;
+    padding-top: 10px;
+    box-sizing: border-box;
+}
+.navi {
+    height: 400px;
+}
+
+/* Navigation */
+
+/* 
+    필요 선택자 정리
+    .navi {}
+    .menu {}
+    .menu li {}
+    .menu li > a {}
+    .menu li:hover > a {}
+    .sub-menu {}
+    .sub-menu a {}
+    .sub-menu a:hover {}
+*/
+.navi {
+    width: 90%;
+    margin: 20px auto;
+}
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.menu li {
+    position: relative;
+}
+.menu li > a {
+    border: 1px solid #000;
+    display: block;
+    text-align: center;
+    padding: 7px;
+}
+.menu li:hover > a {
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+.sub-menu {
+    position: absolute;
+    left: 100%;
+    top: 0;
+    /* 
+    100vw는 부모요소의 너비에 관계없이 강제로 100% 만들기
+    210픽셀을 빼준 것은 .left 영역의 너비를 빼줘야 가로 스크롤이 안생김
+    */
+    width: calc(100vw - 210px);
+    padding: 5px;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+}
+.sub-menu a {
+    color: #fff;
+    width: 120px;
+    /* 
+    너비값을 주기 위해 마진 또는 플렉스를 사용해도 되지만 이번 경우는 간편하게 인라인블록으로 변경 
+    */
+    display: inline-block;
+    transition: 0.5s;
+    padding: 3px;
+}
+.sub-menu a:hover {
+    background-color: #000;
+}
+
+/* Slide */
+.slide {
+    height: 400px;
+    position: relative;
+}
+.slide > div {}
+.slide-image {
+    height: 400px;
+}
+
+.slide-image-inner {
+    height: inherit;
+}
+.slide-image-inner a {
+    /* 실제로 움직이는 요소 */
+    position: absolute;
+    top: 0;
+    left: 0;
+    animation: slide 10s linear infinite;
+    visibility: hidden;
+    height: inherit;
+    width: 100%;
+}
+.slide-image-inner a:nth-child(1) {
+    animation-delay: 0s;
+}
+.slide-image-inner a:nth-child(2) {
+    animation-delay: 3.5s;
+}
+.slide-image-inner a:nth-child(3) {
+    animation-delay: 7s;
+}
+.slide-image-inner a img {
+    width: inherit;
+    height: inherit;
+    object-fit: cover;
+}
+
+@keyframes slide {
+    0% {
+        opacity: 0;
+    }
+    5% {
+        visibility: visible; /* 0% 구간에 visibility: hidden 상태를 보이는 상태로 전환 */
+        opacity: 1;
+    }
+    35% {
+        opacity: 1;
+    }
+    40% {
+        visibility: hidden; /* 보이는 구간이 끝났으니까 투명도 0과 함께 실제로도 보이지 않는 상태로 전환 */
+        opacity: 0;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+
+/* Slide Banner */
+.slide-banner {
+    height: 150px;
+    display: flex;
+}
+.slide-banner a img {
+    width: 100%;
+}
+
+/* News & Gallary */
+.news-gallery {
+    display: flex;
+    padding-top: 40px;
+    box-sizing: border-box;
+}
+.news-gallery > div {
+    height: 250px;
+    flex: 1;
+}
+.news {}
+.gallery {}
+
+/* News & Gallery */
+.tab-inner {
+    width: 95%;
+    margin: auto;
+}
+.btn {}
+.btn span {
+    border: 1px solid #000;
+    display: inline-block;
+    width: 100px;
+    text-align: center;
+    padding: 5px;
+    border-radius: 5px 5px 0 0;
+    border-bottom: none;
+    margin-bottom: -2px;
+    background-color: #737373;
+    color: #fff;
+}
+.tab1,
+.tab2 {
+    border: 1px solid #000;
+    padding: 0 15px;
+    height: 160px;
+}
+.tab1 a {
+    display: block;
+    padding: 5px;
+    border-bottom: 1px dashed #bbb;
+}
+.tab1 a:last-child {
+    border-bottom: none;
+}
+.tab1 a b {
+    float: right;
+    font-weight: normal;
+}
+/* ▼ D유형과 E유형 공개도면에 따라 약간의 수정 */
+.tab2 {
+    padding-top: 10px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+}
+.tab2 a {
+    /* display: inline-block; */
+    text-align: center;
+}
+.tab2 a img {
+    height: 120px;
+    border-radius: 5px;
+    margin: 0 10px;
+}
+.tab2 a span {
+    display: block;
+}
+
+/* Footer */
+/* Footer */
+footer {
+    display: flex;
+	height: 100px;
+	align-items: center;	
+}
+footer > div {
+    /* border: 1px solid #000; */
+}
+.footer-logo {
+    /* D4 유형 공개문제 와이어프레임에 로고가 없지만 배치를 위해서 너비를 줍니다. */
+    width: 200px;
+}
+.footer-content {
+    flex: 1;
+}
+.footer-content div {
+    padding: 5px 15px;
+}
+.footer-link {}
+.footer-link a {
+    color: dodgerblue;
+}
+.footer-link a:after {
+    content: '|';
+    margin-left: 5px;
+    color: #ccc;
+}
+.footer-link a:last-child:after {
+    display: none;
+}
+.footer-link a:hover {
+    text-decoration: underline;
+}
+.copyright {}
+.family-site {
+    width: 230px;
+    text-align: right;
+    padding-right: 40px;
+}
+/* 이건 하면 좋고 안해도 괜찮습니다. */
+.family-site select {
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+/* Modal */
+.modal {
+    background-color: rgba(0, 0, 0, 0.19);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    display: none;
+}
+.modal-content {
+    width: 450px;
+    background-color: #fff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.13);
+}
+.close-modal {
+    float: right;
+    border: 1px solid #000;
+    padding: 5px 10px;
+}
+
+/* 이건 하면 좋고 안해도 괜찮습니다. */
+.modal-content h2 {
+    text-align: center;
+    background-color: yellowgreen;
+    color: #fff;
+    padding: 7px;
+}
+.modal-content ol {
+    padding-left: 18px;
+    font-size: 14px;
+    font-weight: 500;
+}

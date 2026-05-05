@@ -1,0 +1,89 @@
+body {
+    margin: 0;
+}
+.container {
+    border: 1px solid #ddd;
+    width: 1200px;
+    margin: auto;
+}
+header {
+    height: 100px;
+}
+header > div {
+    border: 1px solid #ddd;
+    height: 100px;
+}
+.header-logo {
+    width: 200px;
+    float: left;
+}
+.navi {
+    width: 600px;
+    float: right;
+}
+
+.slide {}
+.slide > div {
+    border: 1px solid #ddd;
+    height: 300px;
+}
+
+.items {
+    overflow: hidden;
+}
+.items > div {
+    border: 1px solid #ddd;
+    height: 200px;
+    float: left;
+    box-sizing: border-box
+}
+.news {
+    width: 500px;
+}
+.banner {
+    width: 350px;
+}
+.shortcut {
+    width: 350px;
+}
+
+footer {
+    overflow: hidden;
+}
+footer > div {
+    height: 100px;
+    float: left;
+    box-sizing: border-box;
+}
+.family-site {
+    width: 200px;
+}
+.copyright {
+    width: 1000px;
+}
+.copyright div {
+    border: 1px solid #ddd;
+    height: 50px;
+}
+
+/* 모듈제작-제이쿼리-슬라이드(가로) */
+.slide {
+    width: 1200px;
+    height: 300px;
+    position: relative;
+    overflow: hidden;
+}
+.slide-items {
+    width: 3600px;
+    font-size: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+
+
+
+
+
+

@@ -1,0 +1,123 @@
+@charset "utf-8";
+
+body {
+    margin: 0;
+    background-color: #fff;
+    color: #333;
+	font-size: 15px;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Entire Layout */
+.container {
+    /* border: 1px solid red; */
+}
+
+.main-content {
+    /* border: 1px solid #000; */
+    display: flex;
+}
+
+.main-content>div {
+    border: 1px solid #000;
+}
+
+.left {
+    width: 200px;
+}
+
+.right {
+    /* width: calc(100% - 200px); */
+    flex: 1;
+}
+
+/* Header */
+header {}
+
+header>div {
+    border: 1px solid red;
+}
+
+.header-logo {
+    height: 100px;
+}
+
+.navi {
+    height: 400px;
+}
+
+.spot-menu {
+    height: 50px;
+}
+
+/* Slide */
+.slide {
+    height: 400px;
+    position: relative;
+}
+.slide-image {
+    /* border: 1px solid blue; */
+    height: 400px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Slide Animation */
+.slide-image-inner {
+    /* 실제로 움직이는 요소 */
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 0;
+    animation: slide 10s linear infinite;
+    height: inherit;
+}
+.slide-image-inner a {
+    /* 움직이는 .slide-image-inner에 포함된 요소 */
+    height: inherit;
+}
+.slide-image-inner a img {
+    width: 100%;
+    height: inherit;
+    /* 부모요소인 a의 너비에 유동적으로 맞춰지게 하는 속성 */
+    object-fit: cover;
+}
+
+/* Shortcut */
+.shortcut {
+    border: 1px solid pink;
+    height: 200px;
+}
+
+/* News & Gallery */
+.news-gallery {
+    border: 1px solid green;
+    height: 250px;
+}
+
+/* Footer */
+footer {
+    display: flex;
+}
+
+footer>div {
+    border: 1px solid blue;
+    height: 100px;
+}
+
+.footer-logo {
+    width: 200px;
+}
+
+.copyright {
+    /* width: calc(100% - 430px); */
+    flex: 1;
+}
+
+.sns {
+    width: 230px;
+}

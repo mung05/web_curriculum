@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>4일차 오후 — About 섹션 빈칸 채우기</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --color-primary:#3D1F8F; --color-accent:#FF6B2B; --color-dark:#1a1a2e; --font-display:'Bebas Neue',cursive; --font-body:'Noto Sans KR',sans-serif; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:var(--font-body); }
+
+    /* 스크롤 테스트용 상단 영역 */
+    #top { height:60vh; background:linear-gradient(135deg,var(--color-primary),var(--color-accent)); display:flex; align-items:center; justify-content:center; color:white; font-family:var(--font-display); font-size:3rem; letter-spacing:4px; }
+
+    /* =====================================================
+       [STEP 1] 페이드인 CSS
+       요소가 화면에 들어오기 전: 숨김 상태
+       .visible 클래스 추가 후: 보임 상태
+       ===================================================== */
+    .fade-in {
+      opacity: ______;                    /* ❶ 기본: 안 보이게 */
+      transform: translateY(______);      /* ❷ 기본: 30px 아래에서 시작 */
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.______ {                     /* ❸ visible 클래스 추가 시 */
+      opacity: ______;                    /* ❹ 보이게 */
+      transform: translateY(______);      /* ❺ 원래 위치로 */
+    }
+
+    /* =====================================================
+       [STEP 2] About 섹션 레이아웃
+       ===================================================== */
+    #about {
+      padding: 0;
+      min-height: 500px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      transition: grid-template-columns 0.5s ease;
+      overflow: hidden;
+      background: var(--color-primary);
+    }
+
+    /* =====================================================
+       [STEP 3] CSS :has() 호버 인터랙션
+       왼쪽 호버 → 왼쪽 꽉 채움
+       오른쪽 호버 → 오른쪽 꽉 채움
+       ===================================================== */
+    #about:has(.about-left:hover)  { grid-template-columns: ______; }  /* ❻ 왼쪽 꽉 채우기 */
+    #about:has(.about-right:hover) { grid-template-columns: ______; }  /* ❼ 오른쪽 꽉 채우기 */
+
+    .about-left {
+      background: var(--color-primary);
+      padding: 80px 60px;
+      display: flex; flex-direction: column; justify-content: center;
+      clip-path: polygon(0 0, 92% 0, 100% 100%, 0 100%);
+      transition: clip-path 0.5s ease, background 0.4s ease;
+      cursor: pointer; overflow: hidden; min-width: 0;
+    }
+
+    #about:has(.about-left:hover) .about-left {
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+      background: #4e28b8;
+    }
+
+    .about-right {
+      background: var(--color-accent);
+      padding: 80px 80px 80px 60px;
+      display: flex; flex-direction: column; justify-content: center;
+      cursor: pointer; overflow: hidden; min-width: 0;
+    }
+
+    .about-label { font-size:0.75rem; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.6); margin-bottom:12px; white-space:nowrap; }
+    .about-title { font-family:var(--font-display); font-size:2.8rem; color:white; letter-spacing:2px; line-height:1.1; margin-bottom:16px; white-space:nowrap; transition:transform 0.4s ease; }
+    .about-left:hover .about-title, .about-right:hover .about-title { transform:translateY(-6px); }
+    .about-desc { color:rgba(255,255,255,0.85); font-size:0.9rem; line-height:1.8; white-space:nowrap; }
+
+    .guide-bar { background:#fff3cd; border-left:4px solid #FF6B2B; padding:14px 20px; position:fixed; bottom:0; left:0; width:100%; z-index:9999; font-size:0.82rem; color:#555; line-height:1.8; }
+    .guide-bar strong { color:#3D1F8F; }
+  </style>
+</head>
+<body>
+
+  <div class="guide-bar">
+    <strong>📝 오늘의 미션</strong> &nbsp;|&nbsp;
+    CSS: ❶기본opacity ❷기본transform ❸클래스명 ❹보임opacity ❺보임transform ❻왼쪽꽉채우기 ❼오른쪽꽉채우기 &nbsp;|&nbsp;
+    JS: ❽querySelectorAll ❾forEach ❿observe
+  </div>
+
+  <div id="top">BREWVENTI</div>
+
+  <section id="about">
+    <div class="about-left fade-in">
+      <p class="about-label">Medium Body</p>
+      <h2 class="about-title">MILD<br>ROAST</h2>
+      <p class="about-desc">견과류의 풍부함과 고소한 맛과 향.<br>부드럽게 시작하는 하루를 위한 선택.</p>
+    </div>
+    <div class="about-right fade-in">
+      <p class="about-label">Full Body</p>
+      <h2 class="about-title">DARK<br>ROAST</h2>
+      <p class="about-desc">다크초콜릿의 깊고 진한 맛과 향.<br>강렬하게 집중하고 싶을 때의 선택.</p>
+    </div>
+  </section>
+
+  <script>
+    /* =====================================================
+       [JS STEP 1] IntersectionObserver 생성
+       ===================================================== */
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.______) {           // ❽ 화면에 보이면 true인 속성
+          entry.target.classList.______('visible');  // ❾ 클래스 추가 메서드
+        }
+      });
+    }, { threshold: 0.2 });
+
+    /* =====================================================
+       [JS STEP 2] 모든 .fade-in 요소에 Observer 연결
+       ===================================================== */
+    const fadeEls = document.______('.fade-in');  // ❿ querySelectorAll
+
+    fadeEls.forEach(el => observer.______(el));   // ⓫ observe 메서드
+  </script>
+</body>
+</html>

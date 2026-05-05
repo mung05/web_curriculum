@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3일차 오전 — 객체 배열 · filter() · 동적 HTML 렌더링</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --color-primary:#3D1F8F; --color-accent:#FF6B2B; --color-dark:#1a1a2e; --font-display:'Bebas Neue',cursive; --font-body:'Noto Sans KR',sans-serif; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:var(--font-body); background:#f8f8f8; color:var(--color-dark); }
+    .page-header { background:var(--color-primary); color:white; padding:24px 32px; margin-bottom:32px; }
+    .page-header h1 { font-family:var(--font-display); font-size:1.6rem; letter-spacing:2px; margin-bottom:4px; }
+    .page-header p  { font-size:0.85rem; opacity:0.7; }
+    .container { max-width:900px; margin:0 auto; padding:0 24px 60px; }
+    .practice-card { background:white; border-radius:12px; padding:28px; margin-bottom:24px; box-shadow:0 2px 12px rgba(0,0,0,0.07); }
+    .practice-card h2 { font-size:1rem; font-weight:700; color:var(--color-primary); margin-bottom:6px; display:flex; align-items:center; gap:8px; }
+    .num { background:var(--color-accent); color:white; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0; }
+    .desc { font-size:0.82rem; color:#888; margin-bottom:20px; line-height:1.6; border-left:3px solid var(--color-accent); padding-left:10px; }
+    .demo-box { background:#f5f5f5; border-radius:8px; padding:20px; margin-top:12px; }
+    .hint { background:#1a1a2e; color:#a8d8a8; padding:12px 16px; border-radius:6px; font-size:0.8rem; font-family:monospace; margin-top:12px; line-height:1.7; }
+    .hint .c { color:#666; }
+    .hint .k { color:#ff9d6c; }
+    .hint .s { color:#a8d8a8; }
+    .hint .m { color:#82aaff; }
+    .btn { padding:10px 20px; border:none; border-radius:6px; font-family:var(--font-body); font-size:0.85rem; font-weight:700; cursor:pointer; transition:0.2s; }
+    .btn-primary { background:var(--color-primary); color:white; }
+    .btn-accent  { background:var(--color-accent); color:white; }
+    .btn-outline { background:transparent; border:2px solid var(--color-primary); color:var(--color-primary); }
+    .btn:hover   { opacity:0.85; transform:translateY(-1px); }
+
+    /* 실습 1: 객체 배열 콘솔 */
+    .prop-list { display:flex; flex-direction:column; gap:6px; }
+    .prop-item { background:white; border-radius:6px; padding:10px 14px; font-size:0.85rem; display:flex; justify-content:space-between; }
+    .prop-key  { color:var(--color-primary); font-weight:700; }
+    .prop-val  { color:#555; }
+    .menu-select-btns { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+
+    /* 실습 2: filter */
+    .filter-btns { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+    .filter-btn  { padding:8px 16px; border:2px solid #ddd; border-radius:50px; background:white; font-family:var(--font-body); font-size:0.82rem; font-weight:700; cursor:pointer; transition:0.2s; }
+    .filter-btn.active { background:var(--color-primary); border-color:var(--color-primary); color:white; }
+    .filter-result { display:flex; flex-wrap:wrap; gap:8px; min-height:40px; }
+    .filter-tag { background:var(--color-primary); color:white; padding:6px 12px; border-radius:50px; font-size:0.8rem; font-weight:700; }
+    .filter-count { font-size:0.82rem; color:#888; margin-top:8px; }
+
+    /* 실습 3: innerHTML 렌더링 */
+    .render-btns { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+    #card-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:12px; min-height:80px; }
+    .mini-card { background:white; border-radius:8px; padding:14px; border-left:3px solid var(--color-primary); }
+    .mini-card .c-name { font-weight:700; font-size:0.9rem; margin-bottom:4px; }
+    .mini-card .c-price { font-size:0.8rem; color:var(--color-accent); font-weight:700; }
+    .mini-card .c-cat   { font-size:0.75rem; color:#aaa; text-transform:uppercase; }
+
+    /* 실습 4: 완성 패턴 */
+    .complete-tabs { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+    .complete-tab  { padding:8px 18px; border:2px solid #ddd; border-radius:50px; background:white; font-family:var(--font-body); font-size:0.82rem; font-weight:700; cursor:pointer; transition:0.2s; }
+    .complete-tab.active { background:var(--color-primary); border-color:var(--color-primary); color:white; }
+    #complete-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px; }
+  </style>
+</head>
+<body>
+
+  <div class="page-header">
+    <h1>DAY 03 — 오전 실습</h1>
+    <p>객체 배열 · filter() · 동적 HTML 렌더링 — BREWVENTI 메뉴 탭 필터의 기반</p>
+  </div>
+
+  <div class="container">
+
+
+    <!-- 실습 1: 객체 배열 속성 읽기 -->
+    <div class="practice-card">
+      <h2><span class="num">1</span> 객체 배열 — 메뉴 속성 읽기</h2>
+      <p class="desc">
+        BREWVENTI 메뉴 데이터는 객체 배열로 관리됩니다.<br>
+        버튼을 클릭하면 해당 메뉴의 모든 속성을 읽어서 표시합니다.
+      </p>
+
+      <div class="demo-box">
+        <div class="menu-select-btns">
+          <button class="btn btn-primary" onclick="showProps(0)">아메리카노</button>
+          <button class="btn btn-outline" onclick="showProps(1)">카페라떼</button>
+          <button class="btn btn-accent"  onclick="showProps(2)">딸기 스무디</button>
+          <button class="btn" style="background:#555;color:white" onclick="showProps(3)">유자 티에이드</button>
+        </div>
+        <div id="prop-display" class="prop-list"></div>
+      </div>
+
+      <div class="hint">
+        <span class="k">const</span> menuData = [<br>
+        &nbsp;&nbsp;{ name: <span class="s">'아메리카노'</span>, category: <span class="s">'coffee'</span>, price: <span class="s">'3,500원'</span> },<br>
+        &nbsp;&nbsp;...<br>
+        ];<br>
+        <br>
+        <span class="c">// 접근 방법</span><br>
+        menuData[<span class="s">0</span>].name      <span class="c">// → '아메리카노'</span><br>
+        menuData[<span class="s">0</span>].category  <span class="c">// → 'coffee'</span><br>
+        menuData[<span class="s">0</span>].price     <span class="c">// → '3,500원'</span>
+      </div>
+    </div>
+
+
+    <!-- 실습 2: filter() -->
+    <div class="practice-card">
+      <h2><span class="num">2</span> Array.filter() — 카테고리 필터링</h2>
+      <p class="desc">
+        filter()는 조건을 통과한 요소만 담긴 새 배열을 반환합니다.<br>
+        버튼을 클릭하면 해당 카테고리 메뉴만 걸러냅니다.
+      </p>
+
+      <div class="demo-box">
+        <div class="filter-btns">
+          <button class="filter-btn active" onclick="filterDemo('all')">전체</button>
+          <button class="filter-btn" onclick="filterDemo('coffee')">커피</button>
+          <button class="filter-btn" onclick="filterDemo('smoothie')">스무디</button>
+          <button class="filter-btn" onclick="filterDemo('tea')">티에이드</button>
+        </div>
+        <div class="filter-result" id="filter-result"></div>
+        <div class="filter-count" id="filter-count"></div>
+      </div>
+
+      <div class="hint">
+        <span class="c">// 원본 배열은 변하지 않음 (비파괴적)</span><br>
+        <span class="k">const</span> filtered = menuData.<span class="m">filter</span>(item => {<br>
+        &nbsp;&nbsp;<span class="k">return</span> item.category === <span class="s">'coffee'</span>;<br>
+        });<br>
+        <br>
+        <span class="c">// 화살표 함수 단축형</span><br>
+        <span class="k">const</span> filtered = menuData.<span class="m">filter</span>(item => item.category === <span class="s">'coffee'</span>);
+      </div>
+    </div>
+
+
+    <!-- 실습 3: innerHTML 렌더링 -->
+    <div class="practice-card">
+      <h2><span class="num">3</span> 동적 HTML 렌더링 — 카드 그리드 생성</h2>
+      <p class="desc">
+        반복문으로 HTML 문자열을 만들고 innerHTML에 한 번에 삽입합니다.<br>
+        버튼을 클릭하면 해당 개수만큼 카드가 렌더링됩니다.
+      </p>
+
+      <div class="demo-box">
+        <div class="render-btns">
+          <button class="btn btn-primary" onclick="renderCards('all')">전체 렌더링</button>
+          <button class="btn btn-outline" onclick="renderCards('coffee')">커피만</button>
+          <button class="btn btn-accent"  onclick="renderCards('smoothie')">스무디만</button>
+          <button class="btn" style="background:#555;color:white" onclick="clearCards()">초기화</button>
+        </div>
+        <div id="card-grid"></div>
+      </div>
+
+      <div class="hint">
+        <span class="k">let</span> html = <span class="s">''</span>; <span class="c">// 빈 문자열에 누적</span><br>
+        <br>
+        <span class="k">for</span> (<span class="k">const</span> item <span class="k">of</span> filtered) {<br>
+        &nbsp;&nbsp;html += <span class="s">`&lt;div class="card"&gt;${item.name}&lt;/div&gt;`</span>;<br>
+        }<br>
+        <br>
+        grid.<span class="m">innerHTML</span> = html; <span class="c">// 한 번에 삽입 (성능 중요!)</span>
+      </div>
+    </div>
+
+
+    <!-- 실습 4: 완성 패턴 (탭 + filter + innerHTML 조합) -->
+    <div class="practice-card">
+      <h2><span class="num">4</span> 완성 패턴 — 탭 + filter + innerHTML 조합</h2>
+      <p class="desc">
+        BREWVENTI 메뉴 섹션의 핵심 패턴입니다.<br>
+        위 세 가지가 합쳐진 완성 버전을 확인하세요.
+      </p>
+
+      <div class="demo-box">
+        <div class="complete-tabs" id="completeTabs">
+          <button class="complete-tab active" data-category="all">전체</button>
+          <button class="complete-tab" data-category="coffee">커피</button>
+          <button class="complete-tab" data-category="smoothie">스무디</button>
+          <button class="complete-tab" data-category="tea">티에이드</button>
+        </div>
+        <div id="complete-grid"></div>
+      </div>
+
+      <div class="hint">
+        <span class="c">// 세 가지 조합 흐름</span><br>
+        <span class="k">function</span> <span class="m">renderMenu</span>(category) {<br>
+        &nbsp;&nbsp;<span class="c">// 1. filter로 데이터 추출</span><br>
+        &nbsp;&nbsp;<span class="k">const</span> filtered = category === <span class="s">'all'</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;? menuData<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;: menuData.<span class="m">filter</span>(item => item.category === category);<br>
+        &nbsp;&nbsp;<span class="c">// 2. HTML 생성</span><br>
+        &nbsp;&nbsp;<span class="k">let</span> html = <span class="s">''</span>;<br>
+        &nbsp;&nbsp;<span class="k">for</span> (<span class="k">const</span> item <span class="k">of</span> filtered) { html += <span class="s">`...`</span>; }<br>
+        &nbsp;&nbsp;<span class="c">// 3. 렌더링</span><br>
+        &nbsp;&nbsp;grid.<span class="m">innerHTML</span> = html;<br>
+        }
+      </div>
+    </div>
+
+
+  </div>
+
+  <script>
+
+    /* ===== 공통 데이터 ===== */
+    const menuData = [
+      { name: '아메리카노',    category: 'coffee',   price: '3,500원' },
+      { name: '카페라떼',      category: 'coffee',   price: '4,500원' },
+      { name: '바닐라라떼',    category: 'coffee',   price: '5,000원' },
+      { name: '딸기 스무디',   category: 'smoothie', price: '5,500원' },
+      { name: '망고 스무디',   category: 'smoothie', price: '5,500원' },
+      { name: '청포도 에이드', category: 'tea',      price: '4,800원' },
+      { name: '유자 티에이드', category: 'tea',      price: '4,800원' },
+    ];
+
+
+    /* ===== 실습 1: 객체 속성 읽기 ===== */
+    function showProps(index) {
+      const item    = menuData[index]; // 배열에서 인덱스로 꺼내기
+      const display = document.querySelector('#prop-display');
+
+      // 객체의 각 속성을 화면에 표시
+      display.innerHTML = `
+        <div class="prop-item">
+          <span class="prop-key">name</span>
+          <span class="prop-val">"${item.name}"</span>
+        </div>
+        <div class="prop-item">
+          <span class="prop-key">category</span>
+          <span class="prop-val">"${item.category}"</span>
+        </div>
+        <div class="prop-item">
+          <span class="prop-key">price</span>
+          <span class="prop-val">"${item.price}"</span>
+        </div>
+        <div class="prop-item">
+          <span class="prop-key">menuData[${index}]</span>
+          <span class="prop-val" style="color:#aaa">인덱스 번호</span>
+        </div>
+      `;
+    }
+
+
+    /* ===== 실습 2: filter() ===== */
+    function filterDemo(category) {
+      // 탭 활성화 업데이트
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.includes(
+          category === 'all' ? '전체' : category === 'coffee' ? '커피' : category === 'smoothie' ? '스무디' : '티에이드'
+        ));
+      });
+
+      // filter() 실행 — 원본 menuData는 변하지 않음
+      const filtered = category === 'all'
+        ? menuData
+        : menuData.filter(item => item.category === category);
+
+      // 결과 태그 표시
+      document.querySelector('#filter-result').innerHTML =
+        filtered.map(item => `<span class="filter-tag">${item.name}</span>`).join('');
+
+      document.querySelector('#filter-count').textContent =
+        `총 ${filtered.length}개 / 전체 ${menuData.length}개`;
+    }
+
+    // 초기 실행
+    filterDemo('all');
+
+
+    /* ===== 실습 3: innerHTML 렌더링 ===== */
+    function renderCards(category) {
+      const filtered = category === 'all'
+        ? menuData
+        : menuData.filter(item => item.category === category);
+
+      // HTML 문자열 누적 → 한 번에 삽입
+      let html = '';
+      for (const item of filtered) {
+        html += `
+          <div class="mini-card">
+            <p class="c-cat">${item.category}</p>
+            <p class="c-name">${item.name}</p>
+            <p class="c-price">${item.price}</p>
+          </div>
+        `;
+      }
+
+      document.querySelector('#card-grid').innerHTML = html;
+    }
+
+    function clearCards() {
+      document.querySelector('#card-grid').innerHTML = '';
+    }
+
+
+    /* ===== 실습 4: 완성 패턴 ===== */
+    const completeTabs = document.querySelectorAll('.complete-tab');
+    const completeGrid = document.querySelector('#complete-grid');
+
+    function renderMenu(category) {
+      // 1. filter
+      const filtered = category === 'all'
+        ? menuData
+        : menuData.filter(item => item.category === category);
+
+      // 2. HTML 생성
+      let html = '';
+      for (const item of filtered) {
+        html += `
+          <div class="mini-card">
+            <p class="c-cat">${item.category}</p>
+            <p class="c-name">${item.name}</p>
+            <p class="c-price">${item.price}</p>
+          </div>
+        `;
+      }
+
+      // 3. 렌더링
+      completeGrid.innerHTML = html;
+    }
+
+    // 탭 클릭 이벤트
+    completeTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        // 전체 초기화 → 하나만 활성화
+        completeTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        renderMenu(tab.dataset.category);
+      });
+    });
+
+    // 초기 렌더링
+    renderMenu('all');
+
+  </script>
+</body>
+</html>

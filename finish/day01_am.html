@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1일차 오전 — CSS변수 · DOM · classList · scroll</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    /* =====================================================
+       BREWVENTI 실습 공통 스타일
+       ===================================================== */
+    :root {
+      --color-primary: #3D1F8F;
+      --color-accent:  #FF6B2B;
+      --color-dark:    #1a1a2e;
+      --color-white:   #ffffff;
+      --color-gray:    #f5f5f5;
+      --font-display:  'Bebas Neue', cursive;
+      --font-body:     'Noto Sans KR', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: #f8f8f8;
+      color: var(--color-dark);
+    }
+
+    /* 실습 페이지 레이아웃 */
+    .page-header {
+      background: var(--color-primary);
+      color: var(--color-white);
+      padding: 24px 32px;
+      margin-bottom: 32px;
+    }
+
+    .page-header h1 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      letter-spacing: 2px;
+      margin-bottom: 4px;
+    }
+
+    .page-header p { font-size: 0.85rem; opacity: 0.7; }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 0 24px 60px; }
+
+    /* 실습 카드 */
+    .practice-card {
+      background: var(--color-white);
+      border-radius: 12px;
+      padding: 28px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    }
+
+    .practice-card h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .practice-card h2 .num {
+      background: var(--color-accent);
+      color: white;
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .desc {
+      font-size: 0.82rem;
+      color: #888;
+      margin-bottom: 20px;
+      line-height: 1.6;
+      border-left: 3px solid var(--color-accent);
+      padding-left: 10px;
+    }
+
+    /* 결과 박스 */
+    .demo-box {
+      background: var(--color-gray);
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 12px;
+    }
+
+    /* 버튼 공통 */
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-primary { background: var(--color-primary); color: white; }
+    .btn-accent  { background: var(--color-accent);  color: white; }
+    .btn-outline { background: transparent; border: 2px solid var(--color-primary); color: var(--color-primary); }
+
+    .btn:hover { opacity: 0.85; transform: translateY(-1px); }
+
+    /* 코드 힌트 */
+    .hint {
+      background: #1a1a2e;
+      color: #a8d8a8;
+      padding: 12px 16px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-family: monospace;
+      margin-top: 12px;
+      line-height: 1.7;
+    }
+
+    .hint .comment { color: #666; }
+    .hint .keyword { color: #ff9d6c; }
+    .hint .string  { color: #a8d8a8; }
+    .hint .method  { color: #82aaff; }
+
+
+    /* =====================================================
+       실습 1 — CSS 변수
+       ===================================================== */
+    #color-box {
+      width: 100%;
+      height: 80px;
+      border-radius: 8px;
+      background: var(--color-primary); /* CSS 변수 사용 */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      transition: background 0.3s;
+    }
+
+    .color-btns { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+
+
+    /* =====================================================
+       실습 2 — DOM 선택 + textContent
+       ===================================================== */
+    #menu-display {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      padding: 16px;
+      background: white;
+      border-radius: 8px;
+      border: 2px dashed var(--color-primary);
+      text-align: center;
+      margin-top: 12px;
+    }
+
+    .menu-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+
+
+    /* =====================================================
+       실습 3 — classList
+       ===================================================== */
+    #logo-box {
+      width: 100%;
+      padding: 20px;
+      border-radius: 8px;
+      background: transparent;
+      border: 2px solid var(--color-primary);
+      text-align: center;
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      letter-spacing: 3px;
+      color: var(--color-primary);
+      transition: all 0.3s;
+    }
+
+    /* active 클래스가 붙으면 스타일 변경 */
+    #logo-box.active {
+      background: var(--color-primary);
+      color: white;
+    }
+
+    /* highlight 클래스 */
+    #logo-box.highlight {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+    }
+
+    .classList-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+
+
+    /* =====================================================
+       실습 4 — scroll 이벤트
+       ===================================================== */
+    #scroll-display {
+      font-size: 2rem;
+      font-family: var(--font-display);
+      color: var(--color-primary);
+      letter-spacing: 2px;
+      text-align: center;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      transition: color 0.3s;
+    }
+
+    #scroll-display.scrolled {
+      color: var(--color-accent);
+    }
+
+    .scroll-guide {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #aaa;
+      margin-top: 8px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="page-header">
+    <h1>DAY 01 — 오전 실습</h1>
+    <p>CSS 변수 · DOM 선택 · classList · scroll 이벤트 — BREWVENTI 코드와 연결</p>
+  </div>
+
+  <div class="container">
+
+
+    <!-- =====================================================
+         실습 1: CSS 변수 — 색상 바꿔보기
+         ===================================================== -->
+    <div class="practice-card">
+      <h2><span class="num">1</span> CSS 변수 — 색상 한 번에 바꾸기</h2>
+      <p class="desc">
+        BREWVENTI 사이트는 :root에 색상 변수를 선언해서 사용합니다.<br>
+        버튼을 클릭하면 JS가 :root의 --color-primary 값을 바꿉니다.<br>
+        CSS 변수 하나를 바꾸면 연결된 모든 색상이 한 번에 바뀌는 것을 확인하세요.
+      </p>
+
+      <div class="demo-box">
+        <div id="color-box">BREWVENTI 헤더 색상</div>
+        <div class="color-btns">
+          <button class="btn btn-primary" onclick="changeColor('#3D1F8F')">퍼플 (원본)</button>
+          <button class="btn" style="background:#1a6b3a;color:white" onclick="changeColor('#1a6b3a')">그린</button>
+          <button class="btn" style="background:#c0392b;color:white" onclick="changeColor('#c0392b')">레드</button>
+          <button class="btn" style="background:#2471a3;color:white" onclick="changeColor('#2471a3')">블루</button>
+        </div>
+      </div>
+
+      <div class="hint">
+        <span class="comment">// CSS 변수를 JS에서 바꾸는 방법</span><br>
+        document.documentElement.<span class="method">style</span>.<span class="method">setProperty</span>(<span class="string">'--color-primary'</span>, <span class="string">'#새색상'</span>);<br>
+        <br>
+        <span class="comment">// BREWVENTI :root 선언 위치</span><br>
+        <span class="keyword">:root</span> {<br>
+        &nbsp;&nbsp;--color-primary: <span class="string">#3D1F8F</span>;<br>
+        &nbsp;&nbsp;--color-accent: <span class="string">#FF6B2B</span>;<br>
+        }
+      </div>
+    </div>
+
+
+    <!-- =====================================================
+         실습 2: DOM 선택 + textContent
+         ===================================================== -->
+    <div class="practice-card">
+      <h2><span class="num">2</span> DOM 선택 — 메뉴 이름 바꾸기</h2>
+      <p class="desc">
+        querySelector로 요소를 선택하고 textContent로 내용을 바꿉니다.<br>
+        BREWVENTI 메뉴 카드에서 이름을 표시할 때 사용하는 방식입니다.
+      </p>
+
+      <div class="demo-box">
+        <div class="menu-btns">
+          <button class="btn btn-primary" onclick="showMenu('아메리카노', '3,500원')">아메리카노</button>
+          <button class="btn btn-outline" onclick="showMenu('카페라떼', '4,500원')">카페라떼</button>
+          <button class="btn btn-accent"  onclick="showMenu('딸기 스무디', '5,500원')">딸기 스무디</button>
+        </div>
+        <div id="menu-display">버튼을 클릭하세요</div>
+      </div>
+
+      <div class="hint">
+        <span class="comment">// DOM 선택 + textContent 변경</span><br>
+        <span class="keyword">const</span> display = document.<span class="method">querySelector</span>(<span class="string">'#menu-display'</span>);<br>
+        display.<span class="method">textContent</span> = <span class="string">`${name} — ${price}`</span>;<br>
+        <br>
+        <span class="comment">// 선택이 잘 됐는지 확인하는 방법</span><br>
+        console.<span class="method">log</span>(display); <span class="comment">// null이면 선택 실패!</span>
+      </div>
+    </div>
+
+
+    <!-- =====================================================
+         실습 3: classList — 클래스 제어
+         ===================================================== -->
+    <div class="practice-card">
+      <h2><span class="num">3</span> classList — 로고 스타일 토글</h2>
+      <p class="desc">
+        BREWVENTI 헤더는 스크롤하면 classList로 'scrolled' 클래스를 추가합니다.<br>
+        add / remove / toggle / contains 4가지 메서드를 직접 눌러서 확인하세요.
+      </p>
+
+      <div class="demo-box">
+        <div id="logo-box">BREWVENTI</div>
+        <div class="classList-btns">
+          <button class="btn btn-primary" onclick="logoAdd()">add('active')</button>
+          <button class="btn btn-outline" onclick="logoRemove()">remove('active')</button>
+          <button class="btn btn-accent"  onclick="logoToggle()">toggle('active')</button>
+          <button class="btn" style="background:#555;color:white" onclick="logoCheck()">contains('active') 확인</button>
+        </div>
+        <div id="contains-result" style="margin-top:10px; font-size:0.85rem; font-weight:700; color:var(--color-primary);"></div>
+      </div>
+
+      <div class="hint">
+        <span class="keyword">const</span> el = document.<span class="method">querySelector</span>(<span class="string">'#logo-box'</span>);<br>
+        <br>
+        el.classList.<span class="method">add</span>(<span class="string">'active'</span>);      <span class="comment">// 클래스 추가</span><br>
+        el.classList.<span class="method">remove</span>(<span class="string">'active'</span>);   <span class="comment">// 클래스 제거</span><br>
+        el.classList.<span class="method">toggle</span>(<span class="string">'active'</span>);   <span class="comment">// 있으면 제거, 없으면 추가</span><br>
+        el.classList.<span class="method">contains</span>(<span class="string">'active'</span>); <span class="comment">// true / false 반환</span>
+      </div>
+    </div>
+
+
+    <!-- =====================================================
+         실습 4: scroll 이벤트
+         ===================================================== -->
+    <div class="practice-card">
+      <h2><span class="num">4</span> scroll 이벤트 — 스크롤 위치 감지</h2>
+      <p class="desc">
+        BREWVENTI 헤더는 스크롤 50px 이상이면 배경이 바뀝니다.<br>
+        아래 숫자는 현재 페이지의 scrollY 값을 실시간으로 보여줍니다.<br>
+        페이지를 스크롤하면서 값이 바뀌는 것을 확인하세요.
+      </p>
+
+      <div class="demo-box">
+        <div id="scroll-display">scrollY: 0px</div>
+        <p class="scroll-guide">↕ 페이지를 스크롤해보세요</p>
+      </div>
+
+      <div class="hint">
+        <span class="comment">// BREWVENTI 헤더 스크롤 감지 코드</span><br>
+        window.<span class="method">addEventListener</span>(<span class="string">'scroll'</span>, () => {<br>
+        &nbsp;&nbsp;<span class="keyword">const</span> y = window.<span class="method">scrollY</span>; <span class="comment">// 현재 스크롤 위치(px)</span><br>
+        <br>
+        &nbsp;&nbsp;<span class="keyword">if</span> (y > 50) {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;header.classList.<span class="method">add</span>(<span class="string">'scrolled'</span>);<br>
+        &nbsp;&nbsp;} <span class="keyword">else</span> {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;header.classList.<span class="method">remove</span>(<span class="string">'scrolled'</span>);<br>
+        &nbsp;&nbsp;}<br>
+        });
+      </div>
+    </div>
+
+
+  </div><!-- /container -->
+
+
+  <script>
+
+    /* =====================================================
+       실습 1: CSS 변수 변경
+       ===================================================== */
+    function changeColor(color) {
+      // document.documentElement = :root 요소
+      // setProperty로 CSS 변수 값을 JS에서 변경
+      document.documentElement.style.setProperty('--color-primary', color);
+
+      // 박스 텍스트도 업데이트
+      document.querySelector('#color-box').textContent = `현재 색상: ${color}`;
+    }
+
+
+    /* =====================================================
+       실습 2: DOM 선택 + textContent
+       ===================================================== */
+    function showMenu(name, price) {
+      // querySelector로 요소 선택
+      const display = document.querySelector('#menu-display');
+
+      // textContent로 내용 변경 (템플릿 리터럴 사용)
+      display.textContent = `${name} — ${price}`;
+    }
+
+
+    /* =====================================================
+       실습 3: classList
+       ===================================================== */
+    const logoBox = document.querySelector('#logo-box');
+    const result  = document.querySelector('#contains-result');
+
+    function logoAdd() {
+      logoBox.classList.add('active');
+      result.textContent = '';
+    }
+
+    function logoRemove() {
+      logoBox.classList.remove('active');
+      result.textContent = '';
+    }
+
+    function logoToggle() {
+      logoBox.classList.toggle('active');
+      result.textContent = '';
+    }
+
+    function logoCheck() {
+      // contains: 클래스가 있으면 true, 없으면 false 반환
+      const has = logoBox.classList.contains('active');
+      result.textContent = `contains('active') → ${has}`;
+      result.style.color = has ? '#52c41a' : '#ff4d4f';
+    }
+
+
+    /* =====================================================
+       실습 4: scroll 이벤트
+       ===================================================== */
+    const scrollDisplay = document.querySelector('#scroll-display');
+
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+
+      // 현재 scrollY 값을 화면에 표시
+      scrollDisplay.textContent = `scrollY: ${Math.round(y)}px`;
+
+      // 50px 이상이면 색상 변경 (BREWVENTI 헤더와 동일한 패턴)
+      if (y > 50) {
+        scrollDisplay.classList.add('scrolled');
+      } else {
+        scrollDisplay.classList.remove('scrolled');
+      }
+    });
+
+  </script>
+</body>
+</html>
