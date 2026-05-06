@@ -1306,17 +1306,17 @@
        [JS-1] 헤더 — 스크롤 감지
        스크롤을 내리면 헤더에 배경색 추가
        ============================================= */
-    const ----
+    const header = document.querySelector('#header');
 
     // scroll 이벤트: 스크롤할 때마다 실행됨
-    window.----('scroll', () ---- {
+    window.addEventListener('scroll', () => {
 
-      if (window.---- > 50) {
+      if (window.scrollY > 50) {
         // 50px 이상 스크롤 → scrolled 클래스 추가 (CSS에서 배경 생김)
-        header.classList.----('scrolled');
+        header.classList.add('scrolled');
       } else {
         // 최상단 → scrolled 클래스 제거
-        header.classList.----('scrolled');
+        header.classList.remove('scrolled');
       }
 
     });
@@ -1349,35 +1349,35 @@
        [JS-3] 히어로 슬라이더
        3초마다 자동으로 슬라이드 전환
        ============================================= */
-    const slides = document.querySelectorAll('.hero-slide'); // 모든 슬라이드
-    const dots   = document.querySelectorAll('.dot');        // 모든 도트
+    const slides = document.----('.hero-slide'); // 모든 슬라이드
+    const dots   = document.----('.dot');        // 모든 도트
     let currentSlide = 0; // 현재 슬라이드 번호 (0부터 시작)
 
     // 특정 번호의 슬라이드로 이동하는 함수
     function goToSlide(index) {
       // 1. 기존 active 제거
-      slides[currentSlide].classList.remove('active');
-      dots[currentSlide].classList.remove('active');
+      slides[----].classList.remove('active');
+      dots[----].classList.remove('active');
 
       // 2. 현재 번호 업데이트
-      currentSlide = index;
+      currentSlide = ----;
 
       // 3. 새 슬라이드에 active 추가
-      slides[currentSlide].classList.add('active');
-      dots[currentSlide].classList.add('active');
+      slides[currentSlide].classList.-----('active');
+      dots[currentSlide].classList.----('active');
     }
 
     // 3초마다 다음 슬라이드로 자동 이동
     setInterval(() => {
-      const next = (currentSlide + 1) % slides.length; // 마지막이면 0으로 돌아옴
-      goToSlide(next);
+      const next = (currentSlide + 1) % ----; // 마지막이면 0으로 돌아옴
+      -----(next);
     }, 3000);
 
     // 도트 클릭 시 해당 슬라이드로 이동
     dots.forEach(dot => {
-      dot.addEventListener('click', () => {
+      dot.addEventListener('----', () => {
         const index = Number(dot.dataset.index); // data-index 속성값 읽기
-        goToSlide(index);
+       ----(index);
       });
     });
 
@@ -1400,7 +1400,7 @@
     ];
 
     const menuGrid = document.querySelector('#menuGrid');
-    const tabBtns  = document.querySelectorAll('.tab-btn');
+    const tabBtns  = document.----('.tab-btn');
 
     // 카드 HTML을 만들어서 화면에 렌더링하는 함수
     function renderMenu(category) {
@@ -1408,10 +1408,10 @@
       // filter(): 조건에 맞는 요소만 새 배열로 반환
       const filtered = category === 'all'
         ? menuData                                          // 전체: 그대로
-        : menuData.filter(item => item.category === category); // 특정 카테고리만
+        : menuData.----(item => item.category === ----); // 특정 카테고리만
 
       // 반복문으로 카드 HTML 생성
-      let html = '';
+      let html = ----
       for (const item of filtered) {
         html += `
           <div class="menu-card">
@@ -1435,9 +1435,9 @@
     tabBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         tabBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+        btn.classList.----('active');
         const category = btn.dataset.category;
-        renderMenu(category);
+        renderMenu(----);
       });
     });
 
@@ -1449,7 +1449,7 @@
         btn.classList.toggle('active', btn.dataset.category === category);
       });
       // 2. 메뉴 렌더링
-      renderMenu(category);
+      renderMenu(----);
     }
 
 
