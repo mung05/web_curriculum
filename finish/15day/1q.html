@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <style>
+        .spacer { height: 100vh; }
+        .box { background: #FF6B2B; color: white; padding: 20px; text-align: center; opacity: 0; transform: translateY(50px); transition: 1s; }
+        .box.visible { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body>
+    <div class="spacer">스크롤을 내려보세요!</div>
+    <div class="box" id="animateBox">짠! 화면에 나타났습니다!</div>
+
+    <script>
+        const target = document.querySelector('#animateBox');
+        
+        // 관찰자 생성
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) { // 화면에 등장했다면
+                    entry.target.classList.add('visible'); // visible 클래스 추가
+                }
+            });
+        });
+
+        observer.observe(target); // 관찰 시작
+    </script>
+</body>
+</html>

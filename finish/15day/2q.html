@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <style>
+        .modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 10px; display: none; z-index: 1000; }
+        .modal.show { display: block; }
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; z-index: 999; }
+        .overlay.show { display: block; }
+    </style>
+</head>
+<body>
+    <button id="openBtn">예약하기</button>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="modal" id="modal">
+        <h2>예약 폼</h2>
+        <button id="closeBtn">닫기</button>
+    </div>
+
+    <script>
+        const openBtn = document.querySelector('#openBtn');
+        const closeBtn = document.querySelector('#closeBtn');
+        const modal = document.querySelector('#modal');
+        const overlay = document.querySelector('#overlay');
+
+        function toggleModal() {
+            modal.classList.toggle('show');
+            overlay.classList.toggle('show');
+        }
+
+        openBtn.addEventListener('click', toggleModal);
+        closeBtn.addEventListener('click', toggleModal);
+        overlay.addEventListener('click', toggleModal); // 배경 눌러도 닫히게
+    </script>
+</body>
+</html>

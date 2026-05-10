@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<body>
+    <input type="text" id="phone" placeholder="010-0000-0000">
+    <button id="checkBtn">번호 검사</button>
+    <p id="msg"></p>
+
+    <script>
+        const phoneInput = document.querySelector('#phone');
+        const checkBtn = document.querySelector('#checkBtn');
+        const msg = document.querySelector('#msg');
+
+        // 010-숫자3~4자리-숫자4자리 패턴
+        const phoneRegex = /^010-\d{3,4}-\d{4}$/; 
+
+        checkBtn.addEventListener('click', () => {
+            const val = phoneInput.value;
+            // .test()는 정규식 패턴에 맞으면 true, 틀리면 false 반환
+            if (phoneRegex.test(val)) {
+                msg.style.color = "green";
+                msg.textContent = "올바른 형식입니다!";
+            } else {
+                msg.style.color = "red";
+                msg.textContent = "번호 형식(하이픈 포함)을 확인해주세요.";
+            }
+        });
+    </script>
+</body>
+</html>
